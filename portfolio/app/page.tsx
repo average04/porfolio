@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const projects = [
@@ -117,6 +118,15 @@ export default function Home() {
               >
                 Contact
               </Link>
+              <a
+                className="rounded-full border border-white/20 px-5 py-3 font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-cyan-200/60 hover:text-white"
+                href="/Resume%20-%20Bayog,%20Jay-R.pdf"
+                download
+                target="_blank"
+                rel="noreferrer"
+              >
+                Download resume
+              </a>
               <div className="flex items-center gap-3 text-slate-300">
                 <a className="transition hover:text-white" href="https://www.linkedin.com" target="_blank" rel="noreferrer">
                   LinkedIn
@@ -136,6 +146,23 @@ export default function Home() {
           <div className="relative">
             <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-white/10 via-white/5 to-cyan-400/10 blur-3xl" />
             <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-emerald-500/10 backdrop-blur">
+              <div className="mb-6 flex items-center gap-4">
+                <div className="h-20 w-20 overflow-hidden rounded-2xl border border-white/10 bg-white/10">
+                  <Image
+                    src="/avatar.png"
+                    alt="Jay-R Bayog portrait"
+                    width={160}
+                    height={160}
+                    className="h-full w-full object-cover"
+                    priority
+                  />
+                </div>
+                <div>
+                  <p className="text-sm uppercase tracking-[0.25em] text-slate-300">Software Engineer</p>
+                  <p className="text-xl font-semibold text-white">Jay-R Bayog</p>
+                  <p className="text-sm text-slate-300">.NET · React · Azure</p>
+                </div>
+              </div>
               <div className="flex items-center gap-4">
                 <div className="h-14 w-14 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400" />
                 <div>
