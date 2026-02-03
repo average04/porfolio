@@ -114,7 +114,15 @@ export default function Home() {
               }`}
               onClick={() => setTheme(isDark ? "light" : "dark")}
             >
-              {isDark ? "Light mode" : "Dark mode"}
+                {isDark ? (
+                <span aria-label="Switch to light mode" role="img">
+                  🌙
+                </span>
+                ) : (
+                <span aria-label="Switch to dark mode" role="img">
+                  ☀️
+                </span>
+                )}
             </button>
             <Link
               className={`rounded-full px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5 ${
