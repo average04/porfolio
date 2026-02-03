@@ -218,12 +218,7 @@ export default function Home() {
               <p className="text-xs uppercase tracking-[0.3em] text-cyan-200/80">Selected work</p>
               <h2 className="text-2xl font-semibold text-white">Projects that keep systems running</h2>
             </div>
-            <Link
-              className="hidden rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-cyan-200/60 hover:text-white sm:inline-flex"
-              href="#contact"
-            >
-              Book a call
-            </Link>
+           
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
@@ -250,7 +245,7 @@ export default function Home() {
                       {item}
                     </span>
                   ))}
-                </div>
+                 </div>
               </Link>
             ))}
           </div>
@@ -289,14 +284,6 @@ export default function Home() {
                 href="mailto:you@example.com"
               >
                 Email me
-              </a>
-              <a
-                className="rounded-full border border-white/30 px-5 py-3 font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:border-cyan-200/60"
-                href="https://cal.com"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Book a call
               </a>
             </div>
           </div>
