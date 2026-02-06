@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 
 const projects = [
   {
-    title: "Enterprise Web Apps on Azure",
-    description: "Built and maintained scalable .NET + React applications deployed to Azure, focusing on reliability and security.",
-    stack: ["C#/.NET", "React", "Azure"],
-    href: "https://example.com",
+    title: "EMBERS",
+    description: "A simple hear you thought out project",
+    stack: ["React NextJS", "Supabase", "TypeScript"],
+    href: "https://embrs.netlify.app/",
   },
   {
     title: "Payment Gateway Modernization",
