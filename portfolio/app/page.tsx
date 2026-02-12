@@ -186,7 +186,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="relative mx-auto max-w-6xl space-y-24 px-6 pb-24 pt-12">
+      <main className="relative mx-auto max-w-6xl space-y-24 px-6 pb-24 pt-12 top-10">
         <section className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
           <div className="space-y-8">
             <p className="text-sm uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Software Engineer</p>
