@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const projects = [
   {
@@ -22,12 +22,29 @@ const projects = [
 const email = "bayogjayr@gmail.com";
 
 const skills = [
-  "C#/.NET application dev",
-  "React front-end",
-  "Azure deployments",
+  "C#/.NET",
+  "React JS/NextJS",
+  "Azure",
   "REST APIs & microservices",
-  "CI/CD & monitoring",
+  "CI/CD",
   "Cross-team collaboration",
+];
+
+const stack = [
+  { name: "C#", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" },
+  { name: ".NET", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg" },
+  { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+  { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg", darkInvert: true },
+  { name: "RabbitMQ", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rabbitmq/rabbitmq-original.svg" },
+  { name: "Azure", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
+  { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+  { name: "MSSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg", darkInvert: true },
+  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
+  { name: "Supabase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" },
+  { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
+  { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+  { name: "Selenium", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" },
+  { name: "Redis", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
 ];
 
 const timeline = [
@@ -58,14 +75,11 @@ const timeline = [
 ];
 
 export default function Home() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-  useEffect(() => {
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window === "undefined") return "dark";
     const stored = window.localStorage.getItem("theme");
-    if (stored === "light" || stored === "dark") {
-      setTheme(stored);
-    }
-  }, []);
+    return stored === "light" || stored === "dark" ? stored : "dark";
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle("light", theme === "light");
@@ -73,13 +87,54 @@ export default function Home() {
     window.localStorage.setItem("theme", theme);
   }, [theme]);
 
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const startX = useRef(0);
+  const scrollStart = useRef(0);
+  const paused = useRef(false);
+
+  useEffect(() => {
+    const el = marqueeRef.current;
+    if (!el) return;
+    let id: number;
+    const step = () => {
+      if (!paused.current && el) {
+        el.scrollLeft += 0.5;
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = 0;
+        }
+      }
+      id = requestAnimationFrame(step);
+    };
+    id = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragging.current = true;
+    paused.current = true;
+    startX.current = e.clientX;
+    scrollStart.current = marqueeRef.current?.scrollLeft ?? 0;
+    marqueeRef.current?.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragging.current || !marqueeRef.current) return;
+    marqueeRef.current.scrollLeft = scrollStart.current - (e.clientX - startX.current);
+  };
+
+  const onPointerUp = () => {
+    dragging.current = false;
+    paused.current = false;
+  };
+
   const isDark = theme === "dark";
   const glow = isDark
     ? { a: "bg-cyan-500/25", b: "bg-indigo-500/25", c: "bg-emerald-500/22" }
     : { a: "bg-cyan-300/35", b: "bg-indigo-300/30", c: "bg-emerald-300/32" };
 
   return (
-    <div className="relative min-h-screen overflow-hidden body-theme">
+    <div className="relative min-h-screen overflow-hidden">
       <div className="pointer-events-none absolute inset-0 opacity-70">
         <div className={`absolute -left-40 top-10 h-96 w-96 rounded-full ${glow.a} blur-[140px]`} />
         <div className={`absolute right-0 top-40 h-96 w-96 rounded-full ${glow.b} blur-[150px]`} />
@@ -97,6 +152,7 @@ export default function Home() {
           </div>
           <nav className="hidden items-center gap-6 text-sm text-muted md:flex">
             <a className="transition hover:text-primary" href="#about">About</a>
+            <a className="transition hover:text-primary" href="#stack">Stack</a>
             <a className="transition hover:text-primary" href="#projects">Projects</a>
             <a className="transition hover:text-primary" href="#experience">Experience</a>
             <a className="transition hover:text-primary" href="#contact">Contact</a>
@@ -110,15 +166,11 @@ export default function Home() {
               }`}
               onClick={() => setTheme(isDark ? "light" : "dark")}
             >
-                {isDark ? (
-                <span aria-label="Switch to light mode" role="img">
-                  🌙
-                </span>
-                ) : (
-                <span aria-label="Switch to dark mode" role="img">
-                  ☀️
-                </span>
-                )}
+              {isDark ? (
+                <span aria-label="Switch to light mode" role="img">🌙</span>
+              ) : (
+                <span aria-label="Switch to dark mode" role="img">☀️</span>
+              )}
             </button>
             <Link
               className={`rounded-full px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5 ${
@@ -158,9 +210,7 @@ export default function Home() {
                 View work
               </Link>
               <Link
-                className={`rounded-full px-5 py-3 font-semibold transition hover:-translate-y-0.5 soft-border ${
-                  isDark ? "" : ""
-                }`}
+                className="rounded-full px-5 py-3 font-semibold transition hover:-translate-y-0.5 soft-border"
                 href="#contact"
               >
                 Contact
@@ -214,7 +264,7 @@ export default function Home() {
                 <div className="h-14 w-14 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400" />
                 <div>
                   <p className="text-sm text-muted">Currently</p>
-                  <p className="text-lg font-semibold text-primary">Engineering scalable .NET + React apps</p>
+                  <p className="text-lg font-semibold text-primary">.NET + React apps</p>
                 </div>
               </div>
               <div className="mt-8 grid grid-cols-2 gap-4 text-sm text-muted">
@@ -254,6 +304,38 @@ export default function Home() {
                 className="rounded-2xl card px-5 py-4 text-sm font-semibold text-primary shadow-lg shadow-emerald-500/10"
               >
                 {skill}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="stack" className="space-y-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Tech stack</p>
+            <h2 className="text-2xl font-semibold text-primary">Technologies I work with</h2>
+          </div>
+          <div
+            ref={marqueeRef}
+            className="flex gap-4 overflow-x-hidden cursor-grab active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] select-none"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerUp}
+          >
+            {[...stack, ...stack].map((tech, i) => (
+              <div
+                key={`${tech.name}-${i}`}
+                className="flex flex-col items-center gap-3 rounded-2xl card p-5 shadow-lg shadow-emerald-500/10 min-w-[100px]"
+              >
+                <Image
+                  src={tech.icon}
+                  alt={tech.name}
+                  width={40}
+                  height={40}
+                  className={tech.darkInvert ? "dark:invert" : ""}
+                  unoptimized
+                />
+                <span className="text-xs font-medium text-muted">{tech.name}</span>
               </div>
             ))}
           </div>

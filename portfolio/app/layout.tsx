@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Portfolio | Jay-R Bayog",
-  description: "One-page portfolio showcasing design and front-end work.",
+  description: "Portfolio of Jay-R Bayog — full-stack .NET and React engineer.",
 };
 
 export default function RootLayout({
