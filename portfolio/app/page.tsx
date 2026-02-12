@@ -345,7 +345,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Selected work</p>
-              <h2 className="text-2xl font-semibold text-primary">Projects that keep systems running</h2>
+              <h2 className="text-2xl font-semibold text-primary">Hobby projects</h2>
             </div>
            
           </div>
