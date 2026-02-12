@@ -12,18 +12,14 @@ const projects = [
     href: "https://embrs.netlify.app/",
   },
   {
-    title: "Payment Gateway Modernization",
+    title: "Bemy",
     description: "Enhanced a C#/.NET payment gateway with automations, support tooling, and stability improvements.",
-    stack: ["C#/.NET", "Payments", "Automation"],
-    href: "https://example.com",
-  },
-  {
-    title: "Notification & Reporting Platform",
-    description: "Delivered microservice-based notifications and reporting using C#/.NET REST APIs and React UI layers.",
-    stack: ["C#/.NET", "React", "REST APIs"],
-    href: "https://example.com",
+    stack: ["React NextJS", "TypeScript"],
+    href: "https://bemy.jayrb.dev",
   },
 ];
+
+const email = "bayogjayr@gmail.com";
 
 const skills = [
   "C#/.NET application dev",
@@ -187,7 +183,7 @@ export default function Home() {
                   GitHub
                 </a>
                 <span className="text-muted">/</span>
-                <a className="transition hover:text-primary" href="mailto:you@example.com">
+                <a className="transition hover:text-primary" href={`mailto:${email}`}>
                   Email
                 </a>
               </div>
@@ -332,7 +328,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
               <a
                 className="rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5"
-                href="mailto:you@example.com"
+                href={`mailto:${email}`}
               >
                 Email me
               </a>
