@@ -7,13 +7,13 @@ import { useEffect, useState } from "react";
 const projects = [
   {
     title: "EMBERS",
-    description: "A simple hear you thought out project",
+    description: "A simple, thoughtful journaling app for sharing and reflecting on ideas.",
     stack: ["React NextJS", "Supabase", "TypeScript"],
     href: "https://embrs.netlify.app/",
   },
   {
     title: "Bemy",
-    description: "Enhanced a C#/.NET payment gateway with automations, support tooling, and stability improvements.",
+    description: "An interactive Valentine's app for sending playful, personalized greetings.",
     stack: ["React NextJS", "TypeScript"],
     href: "https://bemy.jayrb.dev",
   },
