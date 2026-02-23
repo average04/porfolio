@@ -17,6 +17,12 @@ const projects = [
     stack: ["React NextJS", "TypeScript"],
     href: "https://bemy.jayrb.dev",
   },
+  {
+    title: "Talinhaga",
+    description: "A minimalist blog platform for sharing stories, poems, and musings with a clean, distraction-free design.",
+    stack: ["React NextJS", "TypeScript", "Supabase"],
+    href: "https://talinhaga.jayrb.dev",
+  },
 ];
 
 const email = "bayogjayr@gmail.com";
