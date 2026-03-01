@@ -25,10 +25,10 @@ const projects = [
   },
   {
     title: "KaraParty",
-    description : "A AI powered karaoke web app that generates dynamic lyrics and melodies based on user prompts, creating a personalized singing experience.",
-    stack: ["C# .NET 10", "React NextJS", "TypeScript", "ChatGPT API", "Azure Cloud", "Microservices"],
+    description: "An AI-powered karaoke web app that generates dynamic lyrics and melodies based on user prompts.",
+    stack: ["C# .NET 10", "React NextJS", "TypeScript", "ChatGPT API", "Azure"],
     href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
-  }
+  },
 ];
 
 const email = "bayogjayr@gmail.com";
@@ -37,9 +37,9 @@ const skills = [
   "C#/.NET",
   "React JS/NextJS",
   "Azure",
-  "REST APIs & microservices",
+  "REST APIs & Microservices",
   "CI/CD",
-  "Cross-team collaboration",
+  "Cross-team Collaboration",
 ];
 
 const stack = [
@@ -67,7 +67,7 @@ const timeline = [
     summary: "Building and maintaining scalable .NET and ReactJS apps; deploying cloud solutions on Azure with secure delivery.",
   },
   {
-    title: ".Net Developer",
+    title: ".NET Developer",
     place: "Smartmoneta",
     time: "Sept 2024 — May 2025",
     summary: "Maintained and enhanced a C#/.NET payment gateway; delivered automations, application support, and technical support.",
@@ -80,7 +80,7 @@ const timeline = [
   },
   {
     title: "Software Engineer",
-    place: "Palawan Pawnshop Group of Companies",
+    place: "Palawan Pawnshop Group",
     time: "Aug 2019 — Dec 2022",
     summary: "Built notification and reporting systems with C#/.NET REST APIs and ReactJS; enforced coding standards and deployment support.",
   },
@@ -112,9 +112,7 @@ export default function Home() {
     const step = () => {
       if (!paused.current && el) {
         el.scrollLeft += 0.5;
-        if (el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft = 0;
-        }
+        if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
       }
       id = requestAnimationFrame(step);
     };
@@ -129,206 +127,178 @@ export default function Home() {
     scrollStart.current = marqueeRef.current?.scrollLeft ?? 0;
     marqueeRef.current?.setPointerCapture(e.pointerId);
   };
-
   const onPointerMove = (e: React.PointerEvent) => {
     if (!dragging.current || !marqueeRef.current) return;
     marqueeRef.current.scrollLeft = scrollStart.current - (e.clientX - startX.current);
   };
-
   const onPointerUp = () => {
     dragging.current = false;
     paused.current = false;
   };
 
   const isDark = theme === "dark";
-  const glow = isDark
-    ? { a: "bg-cyan-500/25", b: "bg-indigo-500/25", c: "bg-emerald-500/22" }
-    : { a: "bg-cyan-300/35", b: "bg-indigo-300/30", c: "bg-emerald-300/32" };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 opacity-70">
-        <div className={`absolute -left-40 top-10 h-96 w-96 rounded-full ${glow.a} blur-[140px]`} />
-        <div className={`absolute right-0 top-40 h-96 w-96 rounded-full ${glow.b} blur-[150px]`} />
-        <div className={`absolute -bottom-20 left-32 h-72 w-72 rounded-full ${glow.c} blur-[120px]`} />
-      </div>
+    <div className="relative min-h-screen">
+      {/* ── Header ── */}
+      <header
+        className="sticky top-0 z-20 backdrop-blur-md"
+        style={{ borderBottom: "1px solid var(--border)" }}
+      >
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <span className="font-mono-code text-sm tracking-widest text-accent">jayrb.dev</span>
 
-      <header className="sticky top-0 z-20 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-500 shadow-lg shadow-emerald-500/30" />
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-muted">Portfolio</p>
-              <p className="text-base font-semibold text-primary">Jay-R Bayog</p>
-            </div>
-          </div>
-          <nav className="hidden items-center gap-6 text-sm text-muted md:flex">
-            <a className="transition hover:text-primary" href="#about">About</a>
-            <a className="transition hover:text-primary" href="#stack">Stack</a>
-            <a className="transition hover:text-primary" href="#projects">Projects</a>
-            <a className="transition hover:text-primary" href="#experience">Experience</a>
-            <a className="transition hover:text-primary" href="#contact">Contact</a>
+          <nav className="hidden items-center gap-8 md:flex">
+            {[
+              ["01 · About", "#about"],
+              ["02 · Stack", "#stack"],
+              ["03 · Projects", "#projects"],
+              ["04 · Experience", "#experience"],
+              ["05 · Contact", "#contact"],
+            ].map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                className="font-mono-code text-xs tracking-[0.15em] uppercase text-muted transition-colors hover:text-accent"
+              >
+                {label}
+              </a>
+            ))}
           </nav>
+
           <div className="flex items-center gap-3">
             <button
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                isDark
-                  ? "border border-white/20 text-primary hover:-translate-y-0.5 hover:border-cyan-300/60"
-                  : "border border-slate-300 text-primary hover:-translate-y-0.5 hover:border-cyan-500/60"
-              }`}
               onClick={() => setTheme(isDark ? "light" : "dark")}
+              className="font-mono-code text-xs text-muted transition-all hover:text-accent"
+              style={{ border: "1px solid var(--border)", padding: "6px 12px" }}
             >
-              {isDark ? (
-                <span aria-label="Switch to light mode" role="img">🌙</span>
-              ) : (
-                <span aria-label="Switch to dark mode" role="img">☀️</span>
-              )}
+              {isDark ? "LIGHT" : "DARK"}
             </button>
             <Link
-              className={`rounded-full px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5 ${
-                isDark
-                  ? "border border-white/20 text-primary shadow-lg shadow-cyan-500/20 hover:border-cyan-300/60"
-                  : "border border-slate-300 text-primary shadow-lg shadow-cyan-500/10 hover:border-cyan-500/60"
-              }`}
               href="#contact"
+              className="font-mono-code text-xs tracking-widest uppercase text-accent transition-all"
+              style={{ border: "1px solid var(--accent)", padding: "6px 16px" }}
             >
-              Let&apos;s work together
+              Contact
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="relative mx-auto max-w-6xl space-y-24 px-6 pb-24 pt-12 top-10">
-        <section className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
-          <div className="space-y-8">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Software Engineer</p>
-            <h1 className="text-4xl font-semibold leading-tight text-primary sm:text-5xl">
-              I build reliable, cloud-ready web platforms.
-            </h1>
-            <p className="max-w-2xl text-lg leading-relaxed text-muted">
-              I deliver scalable .NET and React solutions, with a focus on clean APIs, Azure deployments, and resilient systems. From enterprise apps to payment gateways, I align engineering craft with business outcomes.
-            </p>
-            <div className="flex flex-wrap gap-4 text-sm text-muted">
-              <span className="chip px-4 py-2">Available for software roles</span>
-              <span className="chip px-4 py-2" style={{ background: "linear-gradient(90deg, rgba(34,211,238,0.22), rgba(16,185,129,0.22))" }}>
-                Based in PH · Open to remote
-              </span>
+      <main className="mx-auto max-w-5xl px-6 pb-24">
+        {/* ── Hero ── */}
+        <section
+          className="flex min-h-[88vh] flex-col justify-center pb-24 pt-16"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
+          <div className="mb-8 flex items-center gap-4">
+            <div
+              className="h-14 w-14 overflow-hidden"
+              style={{ border: "1px solid var(--border)" }}
+            >
+              <Image
+                src="/avatar.png"
+                alt="Jay-R Bayog"
+                width={56}
+                height={56}
+                className="h-full w-full object-cover"
+                priority
+              />
             </div>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
-              <Link
-                className="rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-cyan-500/30 transition hover:-translate-y-0.5"
-                href="#projects"
-              >
-                View work
-              </Link>
-              <Link
-                className="rounded-full px-5 py-3 font-semibold transition hover:-translate-y-0.5 soft-border"
-                href="#contact"
-              >
-                Contact
-              </Link>
-              <a
-                className="rounded-full px-5 py-3 font-semibold transition hover:-translate-y-0.5 soft-border text-primary"
-                href="/Resume%20-%20Bayog,%20Jay-R.pdf"
-                download
-                target="_blank"
-                rel="noreferrer"
-              >
-                Download resume
-              </a>
-              <div className="flex items-center gap-3 text-muted">
-                <a className="transition hover:text-primary" href="https://www.linkedin.com" target="_blank" rel="noreferrer">
-                  LinkedIn
-                </a>
-                <span className="text-muted">/</span>
-                <a className="transition hover:text-primary" href="https://github.com" target="_blank" rel="noreferrer">
-                  GitHub
-                </a>
-                <span className="text-muted">/</span>
-                <a className="transition hover:text-primary" href={`mailto:${email}`}>
-                  Email
-                </a>
-              </div>
+            <p className="font-mono-code text-xs tracking-[0.4em] uppercase text-accent">
+              Software Engineer · Available for roles
+            </p>
+          </div>
+
+          <h1 className="font-display mb-6 text-6xl font-bold leading-[0.92] text-primary sm:text-7xl lg:text-8xl">
+            Jay&#8209;R<br />Bayog.
+          </h1>
+
+          <p className="font-mono-code mb-6 max-w-xl text-sm leading-relaxed text-muted">
+            Reliable, cloud-ready web platforms.
+          </p>
+
+          <p className="font-mono-code mb-10 max-w-md text-xs leading-relaxed text-muted">
+            I write .NET backends and React frontends, ship to Azure, and make
+            sure things don&apos;t break. Six years across fintech, SaaS, and enterprise.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="#projects"
+              className="font-mono-code text-xs tracking-widest uppercase transition-opacity hover:opacity-75"
+              style={{ background: "var(--accent)", color: "var(--bg)", padding: "12px 24px" }}
+            >
+              View work
+            </Link>
+            <a
+              href="/Resume%20-%20Bayog,%20Jay-R.pdf"
+              download
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono-code text-xs tracking-widest uppercase text-muted transition-all hover:text-accent"
+              style={{ border: "1px solid var(--border)", padding: "12px 24px" }}
+            >
+              Resume ↓
+            </a>
+            <div className="font-mono-code flex items-center gap-4 text-xs tracking-wider text-muted">
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-accent">LinkedIn</a>
+              <span>·</span>
+              <a href="https://github.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-accent">GitHub</a>
+              <span>·</span>
+              <a href={`mailto:${email}`} className="transition-colors hover:text-accent">Email</a>
             </div>
           </div>
 
-          <div className="relative">
-            <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-white/10 via-white/5 to-cyan-400/10 blur-3xl" />
-            <div className="rounded-3xl card p-8 shadow-2xl shadow-emerald-500/10 backdrop-blur">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="h-20 w-20 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--panel)]">
-                  <Image
-                    src="/avatar.png"
-                    alt="Jay-R Bayog portrait"
-                    width={160}
-                    height={160}
-                    className="h-full w-full object-cover"
-                    priority
-                  />
+        </section>
+
+        {/* ── 01 About ── */}
+        <section
+          id="about"
+          className="py-20"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+            <div>
+              <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">01 / About</p>
+              <h2 className="font-display mb-4 text-3xl font-bold leading-tight text-primary">
+                Backend-solid,<br />frontend-sharp.
+              </h2>
+              <p className="font-mono-code text-xs leading-relaxed text-muted">
+                I bridge .NET backends with React frontends — keeping APIs clean,
+                deployments stable, and experiences fast. I enjoy untangling legacy
+                code, improving reliability, and shipping dependable features.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {skills.map((skill) => (
+                <div
+                  key={skill}
+                  className="font-mono-code px-4 py-3 text-xs font-semibold tracking-wide text-primary"
+                  style={{
+                    borderLeft: "2px solid var(--accent)",
+                    background: "var(--accent-dim)",
+                  }}
+                >
+                  {skill}
                 </div>
-                <div>
-                  <p className="text-sm uppercase tracking-[0.25em] text-muted">Software Engineer</p>
-                  <p className="text-xl font-semibold text-primary">Jay-R Bayog</p>
-                  <p className="text-sm text-muted">.NET · React · Azure</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400" />
-                <div>
-                  <p className="text-sm text-muted">Currently</p>
-                  <p className="text-lg font-semibold text-primary">.NET + React apps</p>
-                </div>
-              </div>
-              <div className="mt-8 grid grid-cols-2 gap-4 text-sm text-muted">
-                <div className="rounded-2xl card p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted">Focus</p>
-                  <p className="mt-2 text-base font-semibold text-primary">Scalability & reliability</p>
-                </div>
-                <div className="rounded-2xl card p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted">Style</p>
-                  <p className="mt-2 text-base font-semibold text-primary">Pragmatic, test-focused</p>
-                </div>
-                <div className="rounded-2xl card p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted">Collab</p>
-                  <p className="mt-2 text-base font-semibold text-primary">Ship with product & ops</p>
-                </div>
-                <div className="rounded-2xl card p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted">Edge</p>
-                  <p className="mt-2 text-base font-semibold text-primary">Cloud & API depth</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="about" className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
-          <div className="space-y-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">About</p>
-            <h2 className="text-2xl font-semibold text-primary">Backend-solid, frontend-sharp</h2>
-            <p className="text-base leading-relaxed text-muted">
-              I bridge .NET backends with React frontends, keeping APIs clean, deployments stable, and experiences fast. I enjoy untangling legacy code, improving reliability, and collaborating closely with teams to ship dependable features.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {skills.map((skill) => (
-              <div
-                key={skill}
-                className="rounded-2xl card px-5 py-4 text-sm font-semibold text-primary shadow-lg shadow-emerald-500/10"
-              >
-                {skill}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="stack" className="space-y-6">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Tech stack</p>
-            <h2 className="text-2xl font-semibold text-primary">Technologies I work with</h2>
-          </div>
+        {/* ── 02 Stack ── */}
+        <section
+          id="stack"
+          className="py-20"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
+          <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">02 / Stack</p>
+          <h2 className="font-display mb-10 text-3xl font-bold text-primary">Technologies.</h2>
           <div
             ref={marqueeRef}
-            className="flex gap-4 overflow-x-hidden cursor-grab active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] select-none"
+            className="flex cursor-grab select-none gap-3 overflow-x-hidden active:cursor-grabbing"
+            style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
@@ -337,99 +307,150 @@ export default function Home() {
             {[...stack, ...stack].map((tech, i) => (
               <div
                 key={`${tech.name}-${i}`}
-                className="flex flex-col items-center gap-3 rounded-2xl card p-5 shadow-lg shadow-emerald-500/10 min-w-[100px]"
+                className="flex min-w-[92px] flex-col items-center gap-3 p-4 transition-all"
+                style={{ border: "1px solid var(--border)" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "var(--accent)";
+                  (e.currentTarget as HTMLElement).style.background = "var(--accent-dim)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                }}
               >
                 <Image
                   src={tech.icon}
                   alt={tech.name}
-                  width={40}
-                  height={40}
+                  width={34}
+                  height={34}
                   className={tech.darkInvert ? "dark:invert" : ""}
                   unoptimized
                 />
-                <span className="text-xs font-medium text-muted">{tech.name}</span>
+                <span className="font-mono-code text-xs text-muted">{tech.name}</span>
               </div>
             ))}
           </div>
         </section>
 
-        <section id="projects" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Selected work</p>
-              <h2 className="text-2xl font-semibold text-primary">Hobby projects</h2>
-            </div>
-           
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-3">
-            {projects.map((project) => (
+        {/* ── 03 Projects ── */}
+        <section
+          id="projects"
+          className="py-20"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
+          <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">03 / Projects</p>
+          <h2 className="font-display mb-10 text-3xl font-bold text-primary">Hobby work.</h2>
+          <div
+            className="grid md:grid-cols-2"
+            style={{ border: "1px solid var(--border)" }}
+          >
+            {projects.map((project, idx) => (
               <Link
                 key={project.title}
                 href={project.href}
                 target="_blank"
                 rel="noreferrer"
-                className="group relative overflow-hidden rounded-3xl card p-6 shadow-lg shadow-cyan-500/10 transition hover:-translate-y-1 hover:border-cyan-200/40"
+                className="group block p-6 transition-all"
+                style={{
+                  borderBottom: "1px solid var(--border)",
+                  borderRight: idx % 2 === 0 ? "1px solid var(--border)" : undefined,
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "var(--accent-dim)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                }}
               >
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-cyan-400/30 to-emerald-400/30 blur-3xl transition duration-500 group-hover:scale-125" />
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.25em] text-muted">Case study</p>
-                    <h3 className="mt-2 text-xl font-semibold text-primary">{project.title}</h3>
-                  </div>
-                  <span className="chip px-3 py-1 text-xs">View</span>
+                <div className="mb-3 flex items-start justify-between">
+                  <span className="font-mono-code text-xs text-muted">0{idx + 1}</span>
+                  <span className="font-mono-code text-xs text-accent opacity-0 transition-opacity group-hover:opacity-100">↗</span>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-muted">{project.description}</p>
-                <div className="mt-5 flex flex-wrap gap-2 text-xs text-cyan-900/80 dark:text-cyan-100/90">
+                <h3 className="font-display mb-2 text-xl font-bold text-primary transition-colors group-hover:text-accent">
+                  {project.title}
+                </h3>
+                <p className="font-mono-code mb-4 text-xs leading-relaxed text-muted">{project.description}</p>
+                <div className="flex flex-wrap gap-2">
                   {project.stack.map((item) => (
-                    <span key={item} className="chip bg-white/10 px-3 py-1 text-primary">
-                      {item}
-                    </span>
+                    <span key={item} className="chip font-mono-code px-2 py-0.5 text-xs">{item}</span>
                   ))}
-                 </div>
+                </div>
               </Link>
             ))}
           </div>
         </section>
 
-        <section id="experience" className="space-y-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Experience</p>
-          <h2 className="text-2xl font-semibold text-primary">Where I have been crafting</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {timeline.map((item) => (
-              <div
-                key={`${item.place}-${item.title}-${item.time}`}
-                className="rounded-2xl card p-5 shadow-lg shadow-emerald-500/10"
-              >
-                <div className="flex items-center justify-between text-sm text-muted">
-                  <span>{item.place}</span>
-                  <span className="chip px-3 py-1 text-xs">{item.time}</span>
+        {/* ── 04 Experience ── */}
+        <section
+          id="experience"
+          className="py-20"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
+          <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">04 / Experience</p>
+          <h2 className="font-display mb-12 text-3xl font-bold text-primary">Where I&apos;ve built.</h2>
+          <div className="relative">
+            <div
+              className="absolute bottom-0 left-0 top-0 w-px"
+              style={{ background: "var(--border)" }}
+            />
+            <div className="space-y-10">
+              {timeline.map((item, idx) => (
+                <div key={`${item.place}-${idx}`} className="relative pl-8">
+                  <div
+                    className="absolute -left-[3px] top-2 h-[7px] w-[7px] rounded-full"
+                    style={{ background: "var(--accent)" }}
+                  />
+                  <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-mono-code text-xs tracking-wider text-accent">{item.place}</span>
+                    <span className="font-mono-code text-xs text-muted">{item.time}</span>
+                  </div>
+                  <h3 className="font-display mb-2 text-lg font-bold text-primary">{item.title}</h3>
+                  <p className="font-mono-code max-w-lg text-xs leading-relaxed text-muted">{item.summary}</p>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold text-primary">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{item.summary}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
-        <section id="contact" className="rounded-3xl card p-10 shadow-2xl shadow-cyan-500/10 backdrop-blur">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-950 dark:text-cyan-600">Contact</p>
-              <h2 className="text-2xl font-semibold text-primary">Let&apos;s build something distinct</h2>
-              <p className="text-sm text-muted">Share a brief, or just say hi — I respond within one business day.</p>
-            </div>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
-              <a
-                className="rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5"
-                href={`mailto:${email}`}
-              >
-                Email me
-              </a>
-            </div>
+        {/* ── 05 Contact ── */}
+        <section id="contact" className="py-20">
+          <p className="font-mono-code mb-8 text-xs tracking-[0.3em] uppercase text-accent">05 / Contact</p>
+          <h2 className="font-display mb-4 max-w-xl text-5xl font-bold leading-tight text-primary sm:text-6xl">
+            Let&apos;s build<br />
+            <span className="text-accent">something</span><br />
+            distinct.
+          </h2>
+          <p className="font-mono-code mb-10 max-w-xs text-xs leading-relaxed text-muted">
+            Share a brief, or just say hi — I respond within one business day.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <a
+              href={`mailto:${email}`}
+              className="font-mono-code text-xs tracking-widest uppercase transition-opacity hover:opacity-75"
+              style={{ background: "var(--accent)", color: "var(--bg)", padding: "14px 32px" }}
+            >
+              Email me →
+            </a>
+            <a
+              href="/Resume%20-%20Bayog,%20Jay-R.pdf"
+              download
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono-code text-xs tracking-widest uppercase text-muted transition-all hover:text-accent"
+              style={{ border: "1px solid var(--border)", padding: "14px 32px" }}
+            >
+              Download Resume
+            </a>
           </div>
         </section>
       </main>
+
+      <footer style={{ borderTop: "1px solid var(--border)" }} className="py-6">
+        <div className="font-mono-code mx-auto flex max-w-5xl items-center justify-between px-6 text-xs text-muted">
+          <span>Jay-R Bayog · {new Date().getFullYear()}</span>
+          <span>Built with Next.js</span>
+        </div>
+      </footer>
     </div>
   );
 }
