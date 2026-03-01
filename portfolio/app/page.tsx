@@ -23,6 +23,12 @@ const projects = [
     stack: ["React NextJS", "TypeScript", "Supabase"],
     href: "https://talinhaga.jayrb.dev",
   },
+  {
+    title: "KaraParty",
+    description : "A AI powered karaoke web app that generates dynamic lyrics and melodies based on user prompts, creating a personalized singing experience.",
+    stack: ["C# .NET 10", "React NextJS", "TypeScript", "ChatGPT API", "Azure Cloud", "Microservices"],
+    href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
+  }
 ];
 
 const email = "bayogjayr@gmail.com";
