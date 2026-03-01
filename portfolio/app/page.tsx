@@ -9,7 +9,7 @@ const projects = [
     title: "EMBERS",
     description: "A simple, thoughtful journaling app for sharing and reflecting on ideas.",
     stack: ["React NextJS", "Supabase", "TypeScript"],
-    href: "https://www.embersthougts.com/",
+    href: "https://www.embersthoughts.com/",
   },
   {
     title: "Bemy",
