@@ -25,9 +25,15 @@ const projects = [
   },
   {
     title: "KaraParty",
-    description: "An AI-powered karaoke web app that generates dynamic lyrics and melodies based on user prompts.",
-    stack: ["C# .NET 10", "React NextJS", "TypeScript", "ChatGPT API", "Azure"],
+    description: "An AI-powered karaoke web app that generates seperated vocal tracks and lyrics for any song using the ChatGPT API and Azure AI services.",
+    stack: ["C# .NET 10", "React NextJS", "TypeScript", "ChatGPT API", "Azure", "Microservices"],
     href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
+  },
+   {
+    title: "Cityland",
+    description: "Project for Cityland, a real estate listing platform.",
+    stack: ["React NextJS", "TypeScript", "Supabase"],
+    href: "https://cityland.jayrb.dev/",
   },
 ];
 
