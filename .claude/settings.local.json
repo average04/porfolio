@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(npm run lint:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(node -e \"const f = require\\('d:/Projects/portfolio/portfolio/node_modules/next/dist/compiled/@next/font/dist/google/font-data.json'\\); const names = Object.keys\\(f\\); console.log\\(names.filter\\(n => n.toLowerCase\\(\\).includes\\('barlow'\\) || n.toLowerCase\\(\\).includes\\('oswald'\\) || n.toLowerCase\\(\\).includes\\('bebas'\\) || n.toLowerCase\\(\\).includes\\('anton'\\) || n.toLowerCase\\(\\).includes\\('condensed'\\) || n.toLowerCase\\(\\).includes\\('instrument'\\) || n.toLowerCase\\(\\).includes\\('big_shoulder'\\)\\).join\\('\\\\n'\\)\\)\")"
     ]
   }
 }

@@ -2,67 +2,84 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useSpring } from "framer-motion";
+
+// ─── Data ──────────────────────────────────────────────────────────────────
 
 const projects = [
   {
+    num: "01",
     title: "EMBERS",
-    description: "A simple, thoughtful journaling app for sharing and reflecting on ideas.",
-    stack: ["React NextJS", "Supabase", "TypeScript"],
+    year: "2024",
+    desc: "Thoughtful journaling platform for capturing and sharing ideas. Real-time sync, clean and distraction-free.",
+    stack: ["Next.js", "Supabase", "TypeScript"],
     href: "https://www.embersthoughts.com/",
   },
   {
-    title: "Bemy",
-    description: "An interactive Valentine's app for sending playful, personalized greetings.",
-    stack: ["React NextJS", "TypeScript"],
-    href: "https://bemy.jayrb.dev",
-  },
-  {
+    num: "02",
     title: "Talinhaga",
-    description: "A minimalist blog platform for sharing stories, poems, and musings with a clean, distraction-free design.",
-    stack: ["React NextJS", "TypeScript", "Supabase"],
+    year: "2023",
+    desc: "Minimalist blog platform for stories, poems, and essays. Optimized for focused reading.",
+    stack: ["Next.js", "Supabase", "TypeScript"],
     href: "https://talinhaga.jayrb.dev",
   },
   {
-    title: "KaraParty",
-    description: "An AI-powered karaoke web app that generates seperated vocal tracks and lyrics for any song using the ChatGPT API and Azure AI services.",
-    stack: ["C# .NET 10", "React NextJS", "TypeScript", "ChatGPT API", "Azure", "Microservices"],
-    href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
+    num: "03",
+    title: "Bemy",
+    year: "2024",
+    desc: "Interactive Valentine's app for personalized greetings. Designed, built, and deployed in a single day.",
+    stack: ["Next.js", "TypeScript"],
+    href: "https://bemy.jayrb.dev",
   },
-   {
+  {
+    num: "04",
     title: "Cityland",
-    description: "Project for Cityland, a real estate listing platform.",
-    stack: ["React NextJS", "TypeScript", "Supabase"],
+    year: "2023",
+    desc: "Real estate listing platform for browsing and managing property listings.",
+    stack: ["Next.js", "Supabase", "TypeScript"],
     href: "https://cityland.jayrb.dev/",
+  },
+  {
+    num: "05",
+    title: "KaraParty",
+    year: "2024",
+    desc: "AI-powered karaoke web app that separates vocal tracks and generates synced lyrics for any song. Built on microservices with Azure AI and ChatGPT.",
+    stack: ["C# .NET 10", "Next.js", "Azure", "ChatGPT API", "Microservices"],
+    href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
   },
 ];
 
 const email = "bayogjayr@gmail.com";
 
 const skills = [
-  "C#/.NET",
-  "React JS/NextJS",
-  "Azure",
-  "REST APIs & Microservices",
-  "CI/CD",
-  "Cross-team Collaboration",
+  "C# / .NET", "React / Next.js", "Azure Cloud",
+  "REST APIs", "Microservices", "Docker",
+  "CI/CD", "PostgreSQL", "AI Tools",
 ];
 
-const stack = [
-  { name: "C#", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" },
-  { name: ".NET", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg" },
-  { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-  { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg", darkInvert: true },
-  { name: "RabbitMQ", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rabbitmq/rabbitmq-original.svg" },
-  { name: "Azure", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
-  { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
-  { name: "MSSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg", darkInvert: true },
+const techStack = [
+  { name: "C#",         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" },
+  { name: ".NET",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg" },
+  { name: "React",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+  { name: "Next.js",    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg", invert: true },
+  { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+  { name: "Azure",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
+  { name: "Docker",     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
   { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-  { name: "Supabase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" },
-  { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
-  { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
-  { name: "Selenium", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" },
-  { name: "Redis", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
+  { name: "Supabase",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" },
+  { name: "MySQL",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+  { name: "Redis",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
+  { name: "RabbitMQ",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rabbitmq/rabbitmq-original.svg" },
+  { name: "MSSQL",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg", invert: true },
+  { name: "Git",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+  { name: "Selenium",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" },
+];
+
+const tickerItems = [
+  "C# .NET", "React", "Next.js", "TypeScript", "Azure",
+  "REST APIs", "Microservices", "Docker", "PostgreSQL",
+  "Supabase", "Redis", "RabbitMQ", "Git", "CI/CD", "AI Tools",
 ];
 
 const timeline = [
@@ -70,391 +87,549 @@ const timeline = [
     title: "Software Engineer",
     place: "DXC Technologies",
     time: "Sept 2025 — Present",
-    summary: "Building and maintaining scalable .NET and ReactJS apps; deploying cloud solutions on Azure with secure delivery.",
+    desc: "Building and maintaining scalable .NET and React applications. Shipping cloud-native solutions on Azure with robust CI/CD pipelines.",
+    current: true,
   },
   {
     title: ".NET Developer",
     place: "Smartmoneta",
     time: "Sept 2024 — May 2025",
-    summary: "Maintained and enhanced a C#/.NET payment gateway; delivered automations, application support, and technical support.",
+    desc: "Maintained and enhanced a C#/.NET payment gateway. Delivered fintech automations and technical application support.",
+    current: false,
   },
   {
     title: "Software Engineer",
     place: "Flexisource IT",
     time: "Jan 2023 — Sept 2024",
-    summary: "Maintained a SaaS platform on C#/.NET and ReactJS; improved APIs and shipped features across the product.",
+    desc: "Maintained a SaaS platform on C#/.NET and React. Improved APIs and shipped product features across the full stack.",
+    current: false,
   },
   {
     title: "Software Engineer",
     place: "Palawan Pawnshop Group",
     time: "Aug 2019 — Dec 2022",
-    summary: "Built notification and reporting systems with C#/.NET REST APIs and ReactJS; enforced coding standards and deployment support.",
+    desc: "Built notification and reporting systems with .NET REST APIs and React. Enforced coding standards and managed production deployments.",
+    current: false,
   },
 ];
 
+// ─── Animation helpers ─────────────────────────────────────────────────────
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+function Reveal({
+  children,
+  delay = 0,
+  className = "",
+  x = 0,
+  y = 20,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  x?: number;
+  y?: number;
+}) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x, y }}
+      animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: EASE }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function TimelineEntry({ item, delay }: { item: typeof timeline[number]; delay: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  return (
+    <Reveal delay={delay}>
+      <div className="relative pl-8" ref={ref}>
+        <div className={`tl-dot${item.current ? " current" : ""}${inView ? "" : ""}`} />
+        <div className="mb-1 flex flex-wrap items-baseline justify-between gap-3">
+          <span className="font-mono text-xs tracking-widest uppercase" style={{ color: "var(--orange)" }}>
+            {item.place}
+          </span>
+          <span className="font-mono text-xs" style={{ color: "var(--dim)" }}>{item.time}</span>
+        </div>
+        <div className="mb-2 flex items-center gap-3">
+          <h3 className="font-display text-2xl font-bold uppercase tracking-wide" style={{ color: "var(--text)" }}>
+            {item.title}
+          </h3>
+          {item.current && (
+            <span className="font-mono text-xs px-2 py-0.5" style={{ border: "1px solid var(--orange)", color: "var(--orange)" }}>
+              NOW
+            </span>
+          )}
+        </div>
+        <p className="font-body max-w-lg text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
+          {item.desc}
+        </p>
+      </div>
+    </Reveal>
+  );
+}
+
+// ─── Page ──────────────────────────────────────────────────────────────────
+
 export default function Home() {
-  const [theme, setTheme] = useState<"dark" | "light">(() => {
-    if (typeof window === "undefined") return "dark";
-    const stored = window.localStorage.getItem("theme");
-    return stored === "light" || stored === "dark" ? stored : "dark";
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("light", theme === "light");
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    window.localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const marqueeRef = useRef<HTMLDivElement>(null);
-  const dragging = useRef(false);
-  const startX = useRef(0);
-  const scrollStart = useRef(0);
-  const paused = useRef(false);
-
-  useEffect(() => {
-    const el = marqueeRef.current;
-    if (!el) return;
-    let id: number;
-    const step = () => {
-      if (!paused.current && el) {
-        el.scrollLeft += 0.5;
-        if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
-      }
-      id = requestAnimationFrame(step);
-    };
-    id = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(id);
-  }, []);
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    dragging.current = true;
-    paused.current = true;
-    startX.current = e.clientX;
-    scrollStart.current = marqueeRef.current?.scrollLeft ?? 0;
-    marqueeRef.current?.setPointerCapture(e.pointerId);
-  };
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!dragging.current || !marqueeRef.current) return;
-    marqueeRef.current.scrollLeft = scrollStart.current - (e.clientX - startX.current);
-  };
-  const onPointerUp = () => {
-    dragging.current = false;
-    paused.current = false;
-  };
-
-  const isDark = theme === "dark";
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 35 });
 
   return (
-    <div className="relative min-h-screen">
-      {/* ── Header ── */}
-      <header
-        className="sticky top-0 z-20 backdrop-blur-md"
-        style={{ borderBottom: "1px solid var(--border)" }}
+    <div className="relative min-h-screen overflow-x-hidden">
+
+      {/* Progress bar */}
+      <motion.div className="progress-bar" style={{ scaleX, width: "100%" }} />
+
+      {/* ══ HEADER ══════════════════════════════════════════════ */}
+      <motion.header
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: EASE }}
+        className="sticky top-0 z-50 backdrop-blur-md"
+        style={{ borderBottom: "1px solid var(--border)", background: "rgba(12,10,8,0.85)" }}
       >
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <span className="font-mono-code text-sm tracking-widest text-accent">jayrb.dev</span>
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <span className="font-mono text-xs tracking-[0.3em] uppercase" style={{ color: "var(--orange)" }}>jayrb.dev</span>
 
           <nav className="hidden items-center gap-8 md:flex">
-            {[
-              ["01 · About", "#about"],
-              ["02 · Stack", "#stack"],
-              ["03 · Projects", "#projects"],
-              ["04 · Experience", "#experience"],
-              ["05 · Contact", "#contact"],
-            ].map(([label, href]) => (
-              <a
-                key={href}
-                href={href}
-                className="font-mono-code text-xs tracking-[0.15em] uppercase text-muted transition-colors hover:text-accent"
+            {["About", "Projects", "Stack", "Experience", "Contact"].map((item, i) => (
+              <motion.a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + i * 0.05, duration: 0.4, ease: EASE }}
+                className="font-mono text-xs tracking-widest uppercase transition-colors"
+                style={{ color: "var(--muted)" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+                onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
               >
-                {label}
-              </a>
+                {item}
+              </motion.a>
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="font-mono-code text-xs text-muted transition-all hover:text-accent"
-              style={{ border: "1px solid var(--border)", padding: "6px 12px" }}
-            >
-              {isDark ? "LIGHT" : "DARK"}
-            </button>
-            <Link
-              href="#contact"
-              className="font-mono-code text-xs tracking-widest uppercase text-accent transition-all"
-              style={{ border: "1px solid var(--accent)", padding: "6px 16px" }}
-            >
-              Contact
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-6 pb-24">
-        {/* ── Hero ── */}
-        <section
-          className="flex min-h-[88vh] flex-col justify-center pb-24 pt-16"
-          style={{ borderBottom: "1px solid var(--border)" }}
-        >
-          <div className="mb-8 flex items-center gap-4">
-            <div
-              className="h-14 w-14 overflow-hidden"
-              style={{ border: "1px solid var(--border)" }}
-            >
-              <Image
-                src="/avatar.png"
-                alt="Jay-R Bayog"
-                width={56}
-                height={56}
-                className="h-full w-full object-cover"
-                priority
-              />
-            </div>
-            <p className="font-mono-code text-xs tracking-[0.4em] uppercase text-accent">
-              Software Engineer · Available for roles
-            </p>
-          </div>
-
-          <h1 className="font-display mb-6 text-6xl font-bold leading-[0.92] text-primary sm:text-7xl lg:text-8xl">
-            Jay&#8209;R<br />Bayog.
-          </h1>
-
-          <p className="font-mono-code mb-6 max-w-xl text-sm leading-relaxed text-muted">
-            Reliable, cloud-ready web platforms.
-          </p>
-
-          <p className="font-mono-code mb-10 max-w-md text-xs leading-relaxed text-muted">
-            I write .NET backends and React frontends, ship to Azure, and make
-            sure things don&apos;t break. Six years across fintech, SaaS, and enterprise.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href="#projects"
-              className="font-mono-code text-xs tracking-widest uppercase transition-opacity hover:opacity-75"
-              style={{ background: "var(--accent)", color: "var(--bg)", padding: "12px 24px" }}
-            >
-              View work
-            </Link>
-            <a
-              href="/Resume%20-%20Bayog,%20Jay-R.pdf"
-              download
-              target="_blank"
-              rel="noreferrer"
-              className="font-mono-code text-xs tracking-widest uppercase text-muted transition-all hover:text-accent"
-              style={{ border: "1px solid var(--border)", padding: "12px 24px" }}
-            >
-              Resume ↓
-            </a>
-            <div className="font-mono-code flex items-center gap-4 text-xs tracking-wider text-muted">
-              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-accent">LinkedIn</a>
-              <span>·</span>
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-accent">GitHub</a>
-              <span>·</span>
-              <a href={`mailto:${email}`} className="transition-colors hover:text-accent">Email</a>
-            </div>
-          </div>
-
-        </section>
-
-        {/* ── 01 About ── */}
-        <section
-          id="about"
-          className="py-20"
-          style={{ borderBottom: "1px solid var(--border)" }}
-        >
-          <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
-            <div>
-              <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">01 / About</p>
-              <h2 className="font-display mb-4 text-3xl font-bold leading-tight text-primary">
-                Backend-solid,<br />frontend-sharp.
-              </h2>
-              <p className="font-mono-code text-xs leading-relaxed text-muted">
-                I bridge .NET backends with React frontends — keeping APIs clean,
-                deployments stable, and experiences fast. I enjoy untangling legacy
-                code, improving reliability, and shipping dependable features.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {skills.map((skill) => (
-                <div
-                  key={skill}
-                  className="font-mono-code px-4 py-3 text-xs font-semibold tracking-wide text-primary"
-                  style={{
-                    borderLeft: "2px solid var(--accent)",
-                    background: "var(--accent-dim)",
-                  }}
-                >
-                  {skill}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 02 Stack ── */}
-        <section
-          id="stack"
-          className="py-20"
-          style={{ borderBottom: "1px solid var(--border)" }}
-        >
-          <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">02 / Stack</p>
-          <h2 className="font-display mb-10 text-3xl font-bold text-primary">Technologies.</h2>
-          <div
-            ref={marqueeRef}
-            className="flex cursor-grab select-none gap-3 overflow-x-hidden active:cursor-grabbing"
-            style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerLeave={onPointerUp}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.45, duration: 0.5 }}
           >
-            {[...stack, ...stack].map((tech, i) => (
-              <div
-                key={`${tech.name}-${i}`}
-                className="flex min-w-[92px] flex-col items-center gap-3 p-4 transition-all"
-                style={{ border: "1px solid var(--border)" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--accent)";
-                  (e.currentTarget as HTMLElement).style.background = "var(--accent-dim)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                  (e.currentTarget as HTMLElement).style.background = "transparent";
-                }}
-              >
-                <Image
-                  src={tech.icon}
-                  alt={tech.name}
-                  width={34}
-                  height={34}
-                  className={tech.darkInvert ? "dark:invert" : ""}
-                  unoptimized
-                />
-                <span className="font-mono-code text-xs text-muted">{tech.name}</span>
+            <Link href="#contact" className="btn-primary">Hire me →</Link>
+          </motion.div>
+        </div>
+      </motion.header>
+
+      <main className="mx-auto max-w-6xl px-6 pb-32">
+
+        {/* ══ HERO ════════════════════════════════════════════════ */}
+        <section className="flex min-h-[92vh] flex-col justify-center pt-10 pb-10">
+
+          {/* Status */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
+            className="mb-8 inline-flex w-fit items-center gap-2.5"
+          >
+            <div className="status-dot" />
+            <span className="font-mono text-xs tracking-[0.25em] uppercase" style={{ color: "var(--muted)" }}>
+              Available for roles
+            </span>
+          </motion.div>
+
+          {/* Name — each word clips up */}
+          <div className="mb-8">
+            {[
+              { text: "JAY-R",  color: "var(--text)" },
+              { text: "BAYOG.", color: "var(--orange)" },
+            ].map(({ text, color }, i) => (
+              <div key={text} className="overflow-hidden leading-none">
+                <motion.div
+                  initial={{ y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 1, delay: 0.3 + i * 0.15, ease: EASE }}
+                >
+                  <span
+                    className="font-display block font-black uppercase"
+                    style={{
+                      fontSize: "clamp(5rem, 18vw, 14rem)",
+                      lineHeight: 0.88,
+                      letterSpacing: "-0.01em",
+                      color,
+                    }}
+                  >
+                    {text}
+                  </span>
+                </motion.div>
               </div>
             ))}
           </div>
+
+          {/* Animated rule */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.1, delay: 0.75, ease: EASE }}
+            className="mb-8 rule"
+            style={{ transformOrigin: "left" }}
+          />
+
+          {/* Tagline + description */}
+          <div className="grid gap-6 lg:grid-cols-[1fr_1fr] mb-10">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.9, ease: EASE }}
+              className="font-body text-lg leading-snug"
+              style={{ color: "var(--muted)" }}
+            >
+              Full-stack engineer —{" "}
+              <span style={{ color: "var(--text)" }}>.NET backends</span>,{" "}
+              <span style={{ color: "var(--text)" }}>React frontends</span>,{" "}
+              Azure cloud.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0, ease: EASE }}
+              className="font-body text-sm leading-relaxed"
+              style={{ color: "var(--muted)" }}
+            >
+              Six years building production systems across fintech, SaaS, and
+              enterprise. I write clean code, ship on time, and make things
+              that don&apos;t break. I leverage AI tools like Claude to move
+              faster and build smarter.
+            </motion.p>
+          </div>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1, ease: EASE }}
+            className="mb-10 flex flex-wrap items-center gap-4"
+          >
+            <Link href="#projects" className="btn-primary">View work →</Link>
+            <a
+              href="/Resume%20-%20Bayog,%20Jay-R.pdf"
+              download target="_blank" rel="noreferrer"
+              className="btn-outline"
+            >
+              Resume ↓
+            </a>
+            <div className="flex items-center gap-5" style={{ marginLeft: "4px" }}>
+              {[
+                ["LinkedIn", "https://www.linkedin.com"],
+                ["GitHub",   "https://github.com"],
+                ["Email",    `mailto:${email}`],
+              ].map(([label, href]) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noreferrer" : undefined}
+                  className="font-mono text-xs tracking-widest uppercase transition-colors"
+                  style={{ color: "var(--dim)" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "var(--orange)")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "var(--dim)")}
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2, ease: EASE }}
+            className="flex flex-wrap gap-10 pt-8"
+            style={{ borderTop: "1px solid var(--border)" }}
+          >
+            {[["6+", "Years exp"], ["4", "Companies"], ["5+", "Side projects"]].map(([n, l]) => (
+              <div key={l}>
+                <div
+                  className="font-display font-black uppercase"
+                  style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", lineHeight: 1, color: "var(--orange)" }}
+                >
+                  {n}
+                </div>
+                <div className="font-mono text-xs tracking-widest uppercase mt-1" style={{ color: "var(--dim)" }}>
+                  {l}
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </section>
 
-        {/* ── 03 Projects ── */}
-        <section
-          id="projects"
-          className="py-20"
-          style={{ borderBottom: "1px solid var(--border)" }}
-        >
-          <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">03 / Projects</p>
-          <h2 className="font-display mb-10 text-3xl font-bold text-primary">Hobby work.</h2>
-          <div
-            className="grid md:grid-cols-2"
-            style={{ border: "1px solid var(--border)" }}
-          >
-            {projects.map((project, idx) => (
-              <Link
-                key={project.title}
-                href={project.href}
-                target="_blank"
-                rel="noreferrer"
-                className="group block p-6 transition-all"
-                style={{
-                  borderBottom: "1px solid var(--border)",
-                  borderRight: idx % 2 === 0 ? "1px solid var(--border)" : undefined,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = "var(--accent-dim)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = "transparent";
-                }}
-              >
-                <div className="mb-3 flex items-start justify-between">
-                  <span className="font-mono-code text-xs text-muted">0{idx + 1}</span>
-                  <span className="font-mono-code text-xs text-accent opacity-0 transition-opacity group-hover:opacity-100">↗</span>
+        {/* ══ TICKER ══════════════════════════════════════════════ */}
+        <div className="ticker-wrap mb-24 -mx-6">
+          <div className="ticker-track">
+            {[...tickerItems, ...tickerItems].map((item, i) => (
+              <span key={i} className="ticker-item">
+                {item}
+                <span className="ticker-dot"> ✦ </span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ══ ABOUT ═══════════════════════════════════════════════ */}
+        <section id="about" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
+          <Reveal>
+            <p className="label mb-6">01 / About</p>
+          </Reveal>
+
+          <div className="grid gap-14 lg:grid-cols-[1fr_1.2fr]">
+            <div>
+              <Reveal delay={0.1}>
+                <h2
+                  className="font-display font-black uppercase mb-6"
+                  style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, letterSpacing: "-0.01em", color: "var(--text)" }}
+                >
+                  Backend-solid,{" "}
+                  <span style={{ color: "var(--orange)" }}>frontend-sharp.</span>
+                </h2>
+              </Reveal>
+
+              <Reveal delay={0.18}>
+                <div className="mb-4 overflow-hidden" style={{ width: 72, height: 72, border: "1px solid var(--border-md)" }}>
+                  <Image
+                    src="/avatar.png"
+                    alt="Jay-R Bayog"
+                    width={72}
+                    height={72}
+                    className="w-full h-full object-cover"
+                    style={{ filter: "grayscale(30%) sepia(10%)" }}
+                    priority
+                  />
                 </div>
-                <h3 className="font-display mb-2 text-xl font-bold text-primary transition-colors group-hover:text-accent">
-                  {project.title}
-                </h3>
-                <p className="font-mono-code mb-4 text-xs leading-relaxed text-muted">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.stack.map((item) => (
-                    <span key={item} className="chip font-mono-code px-2 py-0.5 text-xs">{item}</span>
-                  ))}
-                </div>
-              </Link>
+              </Reveal>
+
+              <Reveal delay={0.22}>
+                <p className="font-body text-sm leading-relaxed mb-4" style={{ color: "var(--muted)" }}>
+                  I bridge .NET backends with React frontends — keeping APIs clean,
+                  deployments stable, and experiences fast. I enjoy untangling
+                  legacy systems and shipping features that last.
+                </p>
+                <p className="font-body text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
+                  I use AI tools — including Claude — as part of my daily workflow
+                  to prototype faster, debug smarter, and document better.
+                </p>
+              </Reveal>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <Reveal delay={0.1}>
+                <p className="font-mono text-xs tracking-widest uppercase mb-3" style={{ color: "var(--dim)" }}>
+                  Core skills
+                </p>
+              </Reveal>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((s, i) => (
+                  <Reveal key={s} delay={0.12 + i * 0.04}>
+                    <div className="skill-tag">{s}</div>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ PROJECTS ════════════════════════════════════════════ */}
+        <section id="projects" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
+          <Reveal>
+            <p className="label mb-6">02 / Projects</p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h2
+              className="font-display font-black uppercase mb-10"
+              style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, color: "var(--text)" }}
+            >
+              Hobby work.
+            </h2>
+          </Reveal>
+
+          <div style={{ borderTop: "1px solid var(--border)" }}>
+            {projects.map((p, i) => (
+              <Reveal key={p.title} delay={0.06 + i * 0.08}>
+                <Link href={p.href} target="_blank" rel="noreferrer" className="project-row group">
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="flex items-baseline gap-5">
+                      <span className="font-mono text-xs" style={{ color: "var(--dim)" }}>{p.num}</span>
+                      <h3
+                        className="font-display font-bold uppercase transition-colors duration-200"
+                        style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.6rem)", lineHeight: 1, color: "var(--text)", letterSpacing: "-0.01em" }}
+                        onMouseEnter={e => (e.currentTarget.style.color = "var(--orange)")}
+                        onMouseLeave={e => (e.currentTarget.style.color = "var(--text)")}
+                      >
+                        {p.title}
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-4 flex-shrink-0 mt-1">
+                      <span className="font-mono text-xs hidden sm:block" style={{ color: "var(--dim)" }}>{p.year}</span>
+                      <span
+                        className="font-mono text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ color: "var(--orange)" }}
+                      >
+                        ↗
+                      </span>
+                    </div>
+                  </div>
+                  <p className="font-body text-sm leading-relaxed mb-4 max-w-2xl" style={{ color: "var(--muted)" }}>
+                    {p.desc}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {p.stack.map(s => (
+                      <span
+                        key={s}
+                        className="font-mono text-xs px-2 py-1"
+                        style={{ border: "1px solid var(--border)", color: "var(--dim)" }}
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </Link>
+              </Reveal>
             ))}
           </div>
         </section>
 
-        {/* ── 04 Experience ── */}
-        <section
-          id="experience"
-          className="py-20"
-          style={{ borderBottom: "1px solid var(--border)" }}
-        >
-          <p className="font-mono-code mb-4 text-xs tracking-[0.3em] uppercase text-accent">04 / Experience</p>
-          <h2 className="font-display mb-12 text-3xl font-bold text-primary">Where I&apos;ve built.</h2>
+        {/* ══ STACK ═══════════════════════════════════════════════ */}
+        <section id="stack" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
+          <Reveal>
+            <p className="label mb-6">03 / Stack</p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h2
+              className="font-display font-black uppercase mb-10"
+              style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, color: "var(--text)" }}
+            >
+              Technologies.
+            </h2>
+          </Reveal>
+
+          <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
+            {techStack.map((t, i) => (
+              <Reveal key={t.name} delay={0.04 + i * 0.03}>
+                <div className="tech-chip">
+                  <Image
+                    src={t.icon}
+                    alt={t.name}
+                    width={32}
+                    height={32}
+                    className={t.invert ? "invert opacity-75" : ""}
+                    unoptimized
+                  />
+                  <span className="font-mono text-center" style={{ fontSize: "0.6rem", color: "var(--muted)", letterSpacing: "0.04em" }}>
+                    {t.name}
+                  </span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══ EXPERIENCE ══════════════════════════════════════════ */}
+        <section id="experience" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
+          <Reveal>
+            <p className="label mb-6">04 / Experience</p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h2
+              className="font-display font-black uppercase mb-14"
+              style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, color: "var(--text)" }}
+            >
+              Where I&apos;ve built.
+            </h2>
+          </Reveal>
+
           <div className="relative">
             <div
               className="absolute bottom-0 left-0 top-0 w-px"
-              style={{ background: "var(--border)" }}
+              style={{ background: "linear-gradient(to bottom, var(--orange), var(--border) 80%, transparent)" }}
             />
-            <div className="space-y-10">
-              {timeline.map((item, idx) => (
-                <div key={`${item.place}-${idx}`} className="relative pl-8">
-                  <div
-                    className="absolute -left-[3px] top-2 h-[7px] w-[7px] rounded-full"
-                    style={{ background: "var(--accent)" }}
-                  />
-                  <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono-code text-xs tracking-wider text-accent">{item.place}</span>
-                    <span className="font-mono-code text-xs text-muted">{item.time}</span>
-                  </div>
-                  <h3 className="font-display mb-2 text-lg font-bold text-primary">{item.title}</h3>
-                  <p className="font-mono-code max-w-lg text-xs leading-relaxed text-muted">{item.summary}</p>
-                </div>
+            <div className="space-y-12">
+              {timeline.map((item, i) => (
+                <TimelineEntry key={item.place} item={item} delay={0.06 + i * 0.1} />
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── 05 Contact ── */}
-        <section id="contact" className="py-20">
-          <p className="font-mono-code mb-8 text-xs tracking-[0.3em] uppercase text-accent">05 / Contact</p>
-          <h2 className="font-display mb-4 max-w-xl text-5xl font-bold leading-tight text-primary sm:text-6xl">
-            Let&apos;s build<br />
-            <span className="text-accent">something</span><br />
-            distinct.
-          </h2>
-          <p className="font-mono-code mb-10 max-w-xs text-xs leading-relaxed text-muted">
-            Share a brief, or just say hi — I respond within one business day.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <a
-              href={`mailto:${email}`}
-              className="font-mono-code text-xs tracking-widest uppercase transition-opacity hover:opacity-75"
-              style={{ background: "var(--accent)", color: "var(--bg)", padding: "14px 32px" }}
-            >
-              Email me →
-            </a>
-            <a
-              href="/Resume%20-%20Bayog,%20Jay-R.pdf"
-              download
-              target="_blank"
-              rel="noreferrer"
-              className="font-mono-code text-xs tracking-widest uppercase text-muted transition-all hover:text-accent"
-              style={{ border: "1px solid var(--border)", padding: "14px 32px" }}
-            >
-              Download Resume
-            </a>
+        {/* ══ CONTACT ═════════════════════════════════════════════ */}
+        <section id="contact" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
+          <Reveal>
+            <p className="label mb-8">05 / Contact</p>
+          </Reveal>
+
+          <div className="overflow-hidden mb-8">
+            {["Let's build", "something", "great."].map((line, i) => (
+              <div key={line} className="overflow-hidden">
+                <motion.div
+                  initial={{ y: "100%" }}
+                  whileInView={{ y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.85, delay: 0.1 + i * 0.12, ease: EASE }}
+                >
+                  <span
+                    className="font-display font-black uppercase block"
+                    style={{
+                      fontSize: "clamp(3rem, 9vw, 7rem)",
+                      lineHeight: 0.92,
+                      letterSpacing: "-0.01em",
+                      color: i === 2 ? "var(--orange)" : "var(--text)",
+                    }}
+                  >
+                    {line}
+                  </span>
+                </motion.div>
+              </div>
+            ))}
           </div>
+
+          <Reveal delay={0.2}>
+            <p className="font-body text-sm mb-10 max-w-sm leading-relaxed" style={{ color: "var(--muted)" }}>
+              Open to full-time roles, freelance work, and interesting side
+              projects. I respond within one business day.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <div className="flex flex-wrap gap-4">
+              <a href={`mailto:${email}`} className="btn-primary">
+                Email me →
+              </a>
+              <a
+                href="/Resume%20-%20Bayog,%20Jay-R.pdf"
+                download target="_blank" rel="noreferrer"
+                className="btn-outline"
+              >
+                Download Resume
+              </a>
+            </div>
+          </Reveal>
         </section>
       </main>
 
-      <footer style={{ borderTop: "1px solid var(--border)" }} className="py-6">
-        <div className="font-mono-code mx-auto flex max-w-5xl items-center justify-between px-6 text-xs text-muted">
-          <span>Jay-R Bayog · {new Date().getFullYear()}</span>
-          <span>Built with Next.js</span>
+      {/* ══ FOOTER ══════════════════════════════════════════════ */}
+      <footer style={{ borderTop: "1px solid var(--border)" }} className="py-8">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
+          <span className="font-mono text-xs tracking-[0.3em] uppercase" style={{ color: "var(--dim)" }}>
+            Jay-R Bayog · {new Date().getFullYear()}
+          </span>
+          <span className="font-mono text-xs" style={{ color: "var(--orange)" }}>Built with Next.js</span>
         </div>
       </footer>
     </div>
