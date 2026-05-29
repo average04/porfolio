@@ -11,7 +11,7 @@ const projects = [
   {
     num: "01",
     title: "EMBERS",
-    year: "2024",
+    year: "2026",
     desc: "Thoughtful journaling platform for capturing and sharing ideas. Real-time sync, clean and distraction-free.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     href: "https://www.embersthoughts.com/",
@@ -19,7 +19,7 @@ const projects = [
   {
     num: "02",
     title: "Talinhaga",
-    year: "2023",
+    year: "2026",
     desc: "Minimalist blog platform for stories, poems, and essays. Optimized for focused reading.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     href: "https://talinhaga.jayrb.dev",
@@ -27,7 +27,7 @@ const projects = [
   {
     num: "03",
     title: "Bemy",
-    year: "2024",
+    year: "2026",
     desc: "Interactive Valentine's app for personalized greetings. Designed, built, and deployed in a single day.",
     stack: ["Next.js", "TypeScript"],
     href: "https://bemy.jayrb.dev",
@@ -35,7 +35,7 @@ const projects = [
   {
     num: "04",
     title: "Cityland",
-    year: "2023",
+    year: "2026",
     desc: "Real estate listing platform for browsing and managing property listings.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     href: "https://cityland.jayrb.dev/",
@@ -43,10 +43,18 @@ const projects = [
   {
     num: "05",
     title: "KaraParty",
-    year: "2024",
+    year: "2026",
     desc: "AI-powered karaoke web app that separates vocal tracks and generates synced lyrics for any song. Built on microservices with Azure AI and ChatGPT.",
     stack: ["C# .NET 10", "Next.js", "Azure", "ChatGPT API", "Microservices"],
     href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
+  },
+  {
+    num: "06",
+    title: "Kamee Fitness",
+    year: "2026",
+    desc: "Fitness tracking app with workout and run/walk logging, progress visualization, and goal setting. Built with React Native and Supabase for seamless cross-platform experience.",
+    stack: ["React Native", "Supabase", "NextJS"],
+    href: "https://kamee.fit/",
   },
 ];
 
