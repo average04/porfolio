@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/app/components/scroll/SmoothScroll";
 
 const barlow = Barlow_Condensed({
   variable: "--font-display",
@@ -33,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${barlow.variable} ${instrument.variable} ${mono.variable} antialiased`}>
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

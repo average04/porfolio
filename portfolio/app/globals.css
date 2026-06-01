@@ -20,7 +20,13 @@
 
 /* ─── Reset / base ────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+
+/* Lenis owns smooth scroll; native smooth-behavior fights it. */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
 
 body {
   background-color: var(--bg);
@@ -237,4 +243,16 @@ body::before {
 .rule {
   height: 1px;
   background: var(--border);
+}
+
+/* ─── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ticker-track { animation: none !important; }
+  .status-dot { animation: none !important; }
 }
