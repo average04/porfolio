@@ -13,15 +13,33 @@ import {
 } from "framer-motion";
 import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
 
-export default function VelocityMarquee({
-  items,
-  baseVelocity = 2,
-}: {
+type Props = {
   items: string[];
   baseVelocity?: number;
-}) {
-  const reduced = usePrefersReducedMotion();
+};
 
+function Item({ label }: { label: string }) {
+  return (
+    <span className="ticker-item">
+      {label}
+      <span className="ticker-dot"> ✦ </span>
+    </span>
+  );
+}
+
+function StaticTicker({ items }: { items: string[] }) {
+  return (
+    <div className="ticker-wrap -mx-6">
+      <div className="ticker-track">
+        {[...items, ...items].map((item, i) => (
+          <Item key={i} label={item} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AnimatedTicker({ items, baseVelocity = 2 }: Props) {
   const baseX = useMotionValue(0);
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
@@ -34,11 +52,10 @@ export default function VelocityMarquee({
   });
   const directionFactor = useRef(1);
 
-  // 4 copies so the -25% wrap is always covered.
+  // 4 copies so the -25% wrap is always covered (seamless loop).
   const x = useTransform(baseX, (v) => `${wrap(-25, 0, v)}%`);
 
   useAnimationFrame((_, delta) => {
-    if (reduced) return;
     let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
     if (velocityFactor.get() < 0) directionFactor.current = -1;
     else if (velocityFactor.get() > 0) directionFactor.current = 1;
@@ -48,31 +65,21 @@ export default function VelocityMarquee({
 
   const row = [...items, ...items, ...items, ...items];
 
-  if (reduced) {
-    return (
-      <div className="ticker-wrap -mx-6">
-        <div className="ticker-track">
-          {[...items, ...items].map((item, i) => (
-            <span key={i} className="ticker-item">
-              {item}
-              <span className="ticker-dot"> ✦ </span>
-            </span>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="ticker-wrap -mx-6">
       <motion.div className="ticker-track" style={{ x }}>
         {row.map((item, i) => (
-          <span key={i} className="ticker-item">
-            {item}
-            <span className="ticker-dot"> ✦ </span>
-          </span>
+          <Item key={i} label={item} />
         ))}
       </motion.div>
     </div>
   );
+}
+
+export default function VelocityMarquee({ items, baseVelocity = 2 }: Props) {
+  // Gate at the loader level so the animated internals (motion hooks, rAF,
+  // scroll listener) never mount for reduced-motion users.
+  const reduced = usePrefersReducedMotion();
+  if (reduced) return <StaticTicker items={items} />;
+  return <AnimatedTicker items={items} baseVelocity={baseVelocity} />;
 }

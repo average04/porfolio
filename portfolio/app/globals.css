@@ -249,6 +249,5 @@ body::before {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .ticker-track { animation: none !important; }
   .status-dot { animation: none !important; }
 }
