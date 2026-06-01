@@ -11,6 +11,8 @@ import { gsap, ScrollTrigger } from "@/app/lib/gsap";
  */
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    // Snapshot only — does not respond to runtime OS changes.
+    // The CSS @media block in globals.css handles dynamic preference shifts.
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -35,6 +37,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(raf);
+      gsap.ticker.lagSmoothing(500, 33); // restore GSAP default
       lenis.destroy();
     };
   }, []);
