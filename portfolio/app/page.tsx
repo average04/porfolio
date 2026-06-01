@@ -7,6 +7,7 @@ import { motion, useInView, useScroll, useSpring } from "framer-motion";
 import VelocityMarquee from "@/app/components/scroll/VelocityMarquee";
 import Parallax from "@/app/components/scroll/Parallax";
 import PinnedHero from "@/app/components/scroll/PinnedHero";
+import HorizontalProjects from "@/app/components/scroll/HorizontalProjects";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -455,64 +456,7 @@ export default function Home() {
         </section>
 
         {/* ══ PROJECTS ════════════════════════════════════════════ */}
-        <section id="projects" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
-          <Reveal>
-            <p className="label mb-6">02 / Projects</p>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h2
-              className="font-display font-black uppercase mb-10"
-              style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, color: "var(--text)" }}
-            >
-              Hobby work.
-            </h2>
-          </Reveal>
-
-          <div style={{ borderTop: "1px solid var(--border)" }}>
-            {projects.map((p, i) => (
-              <Reveal key={p.title} delay={0.06 + i * 0.08}>
-                <Link href={p.href} target="_blank" rel="noreferrer" className="project-row group">
-                  <div className="flex items-start justify-between gap-4 mb-3">
-                    <div className="flex items-baseline gap-5">
-                      <span className="font-mono text-xs" style={{ color: "var(--dim)" }}>{p.num}</span>
-                      <h3
-                        className="font-display font-bold uppercase transition-colors duration-200"
-                        style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.6rem)", lineHeight: 1, color: "var(--text)", letterSpacing: "-0.01em" }}
-                        onMouseEnter={e => (e.currentTarget.style.color = "var(--orange)")}
-                        onMouseLeave={e => (e.currentTarget.style.color = "var(--text)")}
-                      >
-                        {p.title}
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-4 flex-shrink-0 mt-1">
-                      <span className="font-mono text-xs hidden sm:block" style={{ color: "var(--dim)" }}>{p.year}</span>
-                      <span
-                        className="font-mono text-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ color: "var(--orange)" }}
-                      >
-                        ↗
-                      </span>
-                    </div>
-                  </div>
-                  <p className="font-body text-sm leading-relaxed mb-4 max-w-2xl" style={{ color: "var(--muted)" }}>
-                    {p.desc}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {p.stack.map(s => (
-                      <span
-                        key={s}
-                        className="font-mono text-xs px-2 py-1"
-                        style={{ border: "1px solid var(--border)", color: "var(--dim)" }}
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </section>
+        <HorizontalProjects projects={projects} />
 
         {/* ══ STACK ═══════════════════════════════════════════════ */}
         <section id="stack" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
