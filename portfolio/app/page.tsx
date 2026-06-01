@@ -4,11 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView, useScroll, useSpring } from "framer-motion";
+import dynamic from "next/dynamic";
 import VelocityMarquee from "@/app/components/scroll/VelocityMarquee";
 import Parallax from "@/app/components/scroll/Parallax";
 import PinnedHero from "@/app/components/scroll/PinnedHero";
 import HorizontalProjects from "@/app/components/scroll/HorizontalProjects";
 import PinnedContact from "@/app/components/scroll/PinnedContact";
+
+const ShaderBackground = dynamic(
+  () => import("@/app/components/webgl/ShaderBackground"),
+  { ssr: false },
+);
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -244,7 +250,8 @@ export default function Home() {
 
         {/* ══ HERO ════════════════════════════════════════════════ */}
         <PinnedHero>
-        <section className="relative flex min-h-[92vh] flex-col justify-center pt-10 pb-10">
+        <section className="relative isolate flex min-h-[92vh] flex-col justify-center pt-10 pb-10">
+          <ShaderBackground />
 
           {/* Status */}
           <motion.div
