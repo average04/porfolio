@@ -8,6 +8,7 @@ import VelocityMarquee from "@/app/components/scroll/VelocityMarquee";
 import Parallax from "@/app/components/scroll/Parallax";
 import PinnedHero from "@/app/components/scroll/PinnedHero";
 import HorizontalProjects from "@/app/components/scroll/HorizontalProjects";
+import PinnedContact from "@/app/components/scroll/PinnedContact";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -521,6 +522,7 @@ export default function Home() {
         </section>
 
         {/* ══ CONTACT ═════════════════════════════════════════════ */}
+        <PinnedContact>
         <section id="contact" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
           <Reveal>
             <p className="label mb-8">05 / Contact</p>
@@ -529,24 +531,18 @@ export default function Home() {
           <div className="overflow-hidden mb-8">
             {["Let's build", "something", "great."].map((line, i) => (
               <div key={line} className="overflow-hidden">
-                <motion.div
-                  initial={{ y: "100%" }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.85, delay: 0.1 + i * 0.12, ease: EASE }}
+                <span
+                  data-contact-line
+                  className="font-display font-black uppercase block"
+                  style={{
+                    fontSize: "clamp(3rem, 9vw, 7rem)",
+                    lineHeight: 0.92,
+                    letterSpacing: "-0.01em",
+                    color: i === 2 ? "var(--orange)" : "var(--text)",
+                  }}
                 >
-                  <span
-                    className="font-display font-black uppercase block"
-                    style={{
-                      fontSize: "clamp(3rem, 9vw, 7rem)",
-                      lineHeight: 0.92,
-                      letterSpacing: "-0.01em",
-                      color: i === 2 ? "var(--orange)" : "var(--text)",
-                    }}
-                  >
-                    {line}
-                  </span>
-                </motion.div>
+                  {line}
+                </span>
               </div>
             ))}
           </div>
@@ -573,6 +569,7 @@ export default function Home() {
             </div>
           </Reveal>
         </section>
+        </PinnedContact>
       </main>
 
       {/* ══ FOOTER ══════════════════════════════════════════════ */}
