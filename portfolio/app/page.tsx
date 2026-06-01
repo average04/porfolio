@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { motion, useInView, useScroll, useSpring } from "framer-motion";
 import VelocityMarquee from "@/app/components/scroll/VelocityMarquee";
 import Parallax from "@/app/components/scroll/Parallax";
+import PinnedHero from "@/app/components/scroll/PinnedHero";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -240,7 +241,8 @@ export default function Home() {
       <main className="mx-auto max-w-6xl px-6 pb-32">
 
         {/* ══ HERO ════════════════════════════════════════════════ */}
-        <section className="flex min-h-[92vh] flex-col justify-center pt-10 pb-10">
+        <PinnedHero>
+        <section className="relative flex min-h-[92vh] flex-col justify-center pt-10 pb-10">
 
           {/* Status */}
           <motion.div
@@ -256,7 +258,7 @@ export default function Home() {
           </motion.div>
 
           {/* Name — each word clips up */}
-          <div className="mb-8">
+          <div className="mb-8" data-hero-name>
             {[
               { text: "JAY-R",  color: "var(--text)" },
               { text: "BAYOG.", color: "var(--orange)" },
@@ -293,7 +295,7 @@ export default function Home() {
           />
 
           {/* Tagline + description */}
-          <div className="grid gap-6 lg:grid-cols-[1fr_1fr] mb-10">
+          <div className="grid gap-6 lg:grid-cols-[1fr_1fr] mb-10" data-hero-body>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -381,6 +383,7 @@ export default function Home() {
             ))}
           </motion.div>
         </section>
+        </PinnedHero>
 
         {/* ══ TICKER ══════════════════════════════════════════════ */}
         <div className="mb-24">
