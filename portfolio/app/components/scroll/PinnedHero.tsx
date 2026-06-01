@@ -26,6 +26,9 @@ export default function PinnedHero({ children }: { children: React.ReactNode }) 
           end: "+=80%",
           scrub: true,
           pin: true,
+          // transform-based pin: immune to the page root's overflow-x-hidden
+          // clipping a position:fixed pin in Safari/Firefox.
+          pinType: "transform",
           pinSpacing: true,
           invalidateOnRefresh: true,
         },
