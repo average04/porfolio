@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView, useScroll, useSpring } from "framer-motion";
 import VelocityMarquee from "@/app/components/scroll/VelocityMarquee";
+import Parallax from "@/app/components/scroll/Parallax";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -405,17 +406,19 @@ export default function Home() {
               </Reveal>
 
               <Reveal delay={0.18}>
-                <div className="mb-4 overflow-hidden" style={{ width: 72, height: 72, border: "1px solid var(--border-md)" }}>
-                  <Image
-                    src="/avatar.png"
-                    alt="Jay-R Bayog"
-                    width={72}
-                    height={72}
-                    className="w-full h-full object-cover"
-                    style={{ filter: "grayscale(30%) sepia(10%)" }}
-                    priority
-                  />
-                </div>
+                <Parallax speed={0.25}>
+                  <div className="mb-4 overflow-hidden" style={{ width: 72, height: 72, border: "1px solid var(--border-md)" }}>
+                    <Image
+                      src="/avatar.png"
+                      alt="Jay-R Bayog"
+                      width={72}
+                      height={72}
+                      className="w-full h-full object-cover"
+                      style={{ filter: "grayscale(30%) sepia(10%)" }}
+                      priority
+                    />
+                  </div>
+                </Parallax>
               </Reveal>
 
               <Reveal delay={0.22}>
