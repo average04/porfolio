@@ -22,14 +22,15 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
 
   useGSAP(
     () => {
-      if (reduced || window.matchMedia("(max-width: 1024px)").matches) return;
+      // Tailwind `lg:` is min-width:1024px; gate the pin on the same boundary
+      // so 1024px (e.g. iPad landscape) gets the desktop layout WITH scroll.
+      if (reduced || window.innerWidth < 1024) return;
       const trackEl = track.current;
       const sectionEl = section.current;
       if (!trackEl || !sectionEl) return;
 
       // Exact horizontal overflow of the track, container-agnostic.
       const distance = () => trackEl.scrollWidth - trackEl.clientWidth;
-      if (distance() <= 0) return;
 
       gsap.to(trackEl, {
         x: () => -distance(),
@@ -67,11 +68,11 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
 
         <div
           ref={track}
-          className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:flex-nowrap will-change-transform"
+          className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:flex-nowrap lg:[will-change:transform]"
         >
           {projects.map((p) => (
             <Link
-              key={p.title}
+              key={p.num}
               href={p.href}
               target="_blank"
               rel="noreferrer"
