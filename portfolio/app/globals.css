@@ -84,14 +84,10 @@ body::before {
   border-bottom: 1px solid var(--border);
   padding: 14px 0;
 }
-@keyframes ticker-move {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
 .ticker-track {
   display: inline-flex;
   white-space: nowrap;
-  animation: ticker-move 28s linear infinite;
+  will-change: transform;
 }
 .ticker-item {
   font-family: var(--font-display), sans-serif;

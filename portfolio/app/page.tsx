@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView, useScroll, useSpring } from "framer-motion";
+import VelocityMarquee from "@/app/components/scroll/VelocityMarquee";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -381,15 +382,8 @@ export default function Home() {
         </section>
 
         {/* ══ TICKER ══════════════════════════════════════════════ */}
-        <div className="ticker-wrap mb-24 -mx-6">
-          <div className="ticker-track">
-            {[...tickerItems, ...tickerItems].map((item, i) => (
-              <span key={i} className="ticker-item">
-                {item}
-                <span className="ticker-dot"> ✦ </span>
-              </span>
-            ))}
-          </div>
+        <div className="mb-24">
+          <VelocityMarquee items={tickerItems} />
         </div>
 
         {/* ══ ABOUT ═══════════════════════════════════════════════ */}
