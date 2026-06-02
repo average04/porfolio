@@ -65,39 +65,56 @@ export default function ShaderBackground() {
     const mesh = new Mesh(gl, { geometry, program });
 
     const resize = () => {
+      // Guard a 0x0 box on first paint (lazy ssr:false mount): a zero
+      // uResolution would divide-by-zero in the fragment shader.
+      if (!mount.clientWidth || !mount.clientHeight) return;
       renderer.setSize(mount.clientWidth, mount.clientHeight);
       program.uniforms.uResolution.value.set(gl.canvas.width, gl.canvas.height);
+      if (reduced) renderer.render({ scene: mesh }); // keep static frame correct
     };
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(mount);
     window.addEventListener("resize", resize);
     resize();
 
+    let cancelled = false;
     let raf = 0;
     let visible = true;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        visible = entry.isIntersecting;
-      },
-      { threshold: 0 },
-    );
-    io.observe(mount);
 
     const render = (t: number) => {
+      if (cancelled || !visible) {
+        raf = 0; // fully stop the loop; IO restarts it when visible again
+        return;
+      }
       raf = requestAnimationFrame(render);
-      if (!visible) return;
       program.uniforms.uTime.value = t * 0.001;
       renderer.render({ scene: mesh });
     };
+    const start = () => {
+      if (!cancelled && !reduced && !raf) raf = requestAnimationFrame(render);
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) start();
+      },
+      { threshold: 0, rootMargin: "50px" },
+    );
+    io.observe(mount);
 
     if (reduced) {
       renderer.render({ scene: mesh }); // one static frame
     } else {
-      raf = requestAnimationFrame(render);
+      start();
     }
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      ro.disconnect();
       io.disconnect();
+      window.removeEventListener("resize", resize);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       gl.canvas.remove();
     };
