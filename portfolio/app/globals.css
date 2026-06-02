@@ -162,33 +162,6 @@ body::before {
   background: var(--orange-dim);
 }
 
-/* ─── Project rows ────────────────────────────────────────────── */
-.project-row {
-  display: block;
-  position: relative;
-  padding: 44px 0 44px 0;
-  border-bottom: 1px solid var(--border);
-  transition: padding-left 0.3s ease, background 0.3s ease;
-  overflow: hidden;
-}
-.project-row::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--orange);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.3s ease;
-}
-.project-row:hover {
-  padding-left: 22px;
-  background: var(--surface);
-}
-.project-row:hover::before {
-  transform: scaleY(1);
-}
-
 /* ─── Tech grid ───────────────────────────────────────────────── */
 .tech-chip {
   display: flex;
