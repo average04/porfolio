@@ -31,10 +31,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
-    // Recalculate any pins/triggers once layout settles, then again once web
-    // fonts finish loading (display:swap can shift display-text height and
+    // Recalculate pins/triggers AFTER the next paint (so all child pin
+    // ScrollTriggers have registered and layout has settled), then again once
+    // web fonts finish loading (display:swap can shift display-text height and
     // throw off pin distances).
-    ScrollTrigger.refresh();
+    const refreshRaf = requestAnimationFrame(() => ScrollTrigger.refresh());
     let fontsActive = true;
     if (typeof document !== "undefined" && "fonts" in document) {
       document.fonts.ready.then(() => {
@@ -44,6 +45,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     return () => {
       fontsActive = false;
+      cancelAnimationFrame(refreshRaf);
       lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(raf);
       gsap.ticker.lagSmoothing(500, 33); // restore GSAP default
