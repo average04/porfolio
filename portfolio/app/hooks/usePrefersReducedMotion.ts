@@ -1,25 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribe(callback: () => void): () => void {
+  const mq = window.matchMedia(QUERY);
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function getSnapshot(): boolean {
+  return window.matchMedia(QUERY).matches;
+}
+
+function getServerSnapshot(): boolean {
+  return false;
+}
 
 /**
- * Returns true when the user has requested reduced motion.
- * Reads the initial OS setting lazily (SSR-safe) and updates live
- * whenever the OS setting changes.
+ * Returns true when the user prefers reduced motion.
+ *
+ * SSR-safe via useSyncExternalStore: the server and the first hydration render
+ * use `false` (getServerSnapshot), then React syncs to the real client value
+ * and updates live on change — with no hydration mismatch, even for consumers
+ * that branch their rendered DOM on the result.
  */
 export function usePrefersReducedMotion(): boolean {
-  // Lazy initializer: runs once on the client, returns false on the server.
-  const [reduced, setReduced] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-
-  return reduced;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
