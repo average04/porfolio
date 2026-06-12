@@ -67,6 +67,14 @@ const projects = [
     stack: ["React Native", "Supabase", "NextJS"],
     href: "https://kamee.fit/",
   },
+  {
+    num: "07",
+    title: "Bayani TD",
+    year: "2026",
+    desc: "Filipino hero-themed tower defense game playable in the browser. Canvas gameplay built on Phaser 3, with a Supabase backend.",
+    stack: ["Phaser 3", "TypeScript", "Vite", "Supabase"],
+    href: "https://bayani.jayrb.dev/",
+  },
 ];
 
 const email = "bayogjayr@gmail.com";
