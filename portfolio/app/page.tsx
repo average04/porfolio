@@ -41,7 +41,7 @@ const projects = [
     year: "2026",
     desc: "Interactive Valentine's app for personalized greetings. Designed, built, and deployed in a single day.",
     stack: ["Next.js", "TypeScript"],
-    href: "https://bemy.jayrb.dev",
+    href: "https://bemy-web-app.vercel.app/",
   },
   {
     num: "04",
