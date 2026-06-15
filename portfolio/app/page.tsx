@@ -33,7 +33,7 @@ const projects = [
     year: "2026",
     desc: "Minimalist blog platform for stories, poems, and essays. Optimized for focused reading.",
     stack: ["Next.js", "Supabase", "TypeScript"],
-    href: "https://talinhaga.jayrb.dev",
+    href: "https://talinhaga.vercel.app/",
   },
   {
     num: "03",
