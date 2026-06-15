@@ -49,7 +49,7 @@ const projects = [
     year: "2026",
     desc: "Real estate listing platform for browsing and managing property listings.",
     stack: ["Next.js", "Supabase", "TypeScript"],
-    href: "https://cityland.jayrb.dev/",
+    href: "https://realstate-liard.vercel.app/",
   },
   {
     num: "05",
