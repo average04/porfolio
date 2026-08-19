@@ -21,14 +21,33 @@ const ShaderBackground = dynamic(
 const projects = [
   {
     num: "01",
+    title: "Kamee Fitness",
+    year: "2026",
+    desc: "Fitness tracking app with workout and run/walk logging, progress visualization, and goal setting. Built with React Native and Supabase for seamless cross-platform experience.",
+    stack: ["React Native", "Supabase", "NextJS"],
+    href: "https://kamee.fit/",
+    featured: true,
+  },
+  {
+    num: "02",
+    title: "BetterSurallah",
+    year: "2026",
+    desc: "Citizen-built transparency platform for the municipality of Surallah — budgets, public documents, project funding, and a searchable directory of local officials.",
+    stack: ["Next.js", "Supabase", "TypeScript"],
+    href: "https://bettersurallah.org/",
+    featured: true,
+  },
+  {
+    num: "03",
     title: "EMBERS",
     year: "2026",
     desc: "Thoughtful journaling platform for capturing and sharing ideas. Real-time sync, clean and distraction-free.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     href: "https://www.embersthoughts.com/",
+    featured: true,
   },
   {
-    num: "02",
+    num: "04",
     title: "Talinhaga",
     year: "2026",
     desc: "Minimalist blog platform for stories, poems, and essays. Optimized for focused reading.",
@@ -36,7 +55,7 @@ const projects = [
     href: "https://talinhaga.vercel.app/",
   },
   {
-    num: "03",
+    num: "05",
     title: "Bemy",
     year: "2026",
     desc: "Interactive Valentine's app for personalized greetings. Designed, built, and deployed in a single day.",
@@ -44,7 +63,7 @@ const projects = [
     href: "https://bemy-web-app.vercel.app/",
   },
   {
-    num: "04",
+    num: "06",
     title: "Cityland",
     year: "2026",
     desc: "Real estate listing platform for browsing and managing property listings.",
@@ -52,7 +71,7 @@ const projects = [
     href: "https://realstate-liard.vercel.app/",
   },
   {
-    num: "05",
+    num: "07",
     title: "KaraParty",
     year: "2026",
     desc: "AI-powered karaoke web app that separates vocal tracks and generates synced lyrics for any song. Built on microservices with Azure AI and ChatGPT.",
@@ -60,15 +79,7 @@ const projects = [
     href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
   },
   {
-    num: "06",
-    title: "Kamee Fitness",
-    year: "2026",
-    desc: "Fitness tracking app with workout and run/walk logging, progress visualization, and goal setting. Built with React Native and Supabase for seamless cross-platform experience.",
-    stack: ["React Native", "Supabase", "NextJS"],
-    href: "https://kamee.fit/",
-  },
-  {
-    num: "07",
+    num: "08",
     title: "Bayani TD",
     year: "2026",
     desc: "Filipino hero-themed tower defense game playable in the browser. Canvas gameplay built on Phaser 3, with a Supabase backend.",

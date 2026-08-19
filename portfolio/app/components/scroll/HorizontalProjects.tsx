@@ -13,6 +13,7 @@ export type Project = {
   desc: string;
   stack: string[];
   href: string;
+  featured?: boolean;
 };
 
 export default function HorizontalProjects({ projects }: { projects: Project[] }) {
@@ -76,9 +77,17 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
               href={p.href}
               target="_blank"
               rel="noreferrer"
-              className="group block w-full shrink-0 lg:w-[440px] p-6"
-              style={{ border: "1px solid var(--border)", background: "var(--surface)" }}
+              className={`group block w-full shrink-0 p-6 ${p.featured ? "lg:w-[560px]" : "lg:w-[440px]"}`}
+              style={{
+                border: p.featured ? "1px solid var(--orange)" : "1px solid var(--border)",
+                background: "var(--surface)",
+              }}
             >
+              {p.featured && (
+                <p className="font-mono text-xs uppercase mb-4" style={{ color: "var(--orange)" }}>
+                  ● Featured
+                </p>
+              )}
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div className="flex items-baseline gap-5">
                   <span className="font-mono text-xs" style={{ color: "var(--dim)" }}>{p.num}</span>
