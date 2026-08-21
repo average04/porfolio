@@ -360,7 +360,7 @@ export default function Home() {
           >
             <Link href="#projects" className="btn-primary">View work →</Link>
             <a
-              href="/Resume%20-%20Bayog,%20Jay-R.pdf"
+              href="/Resume-Bayog_JayR.pdf"
               download target="_blank" rel="noreferrer"
               className="btn-outline"
             >
@@ -586,7 +586,7 @@ export default function Home() {
                 Email me →
               </a>
               <a
-                href="/Resume%20-%20Bayog,%20Jay-R.pdf"
+                href="/Resume-Bayog_JayR.pdf"
                 download target="_blank" rel="noreferrer"
                 className="btn-outline"
               >
