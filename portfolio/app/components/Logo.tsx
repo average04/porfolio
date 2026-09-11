@@ -20,7 +20,7 @@ export function Logo({
   const font = "'Barlow Condensed', 'Arial Narrow', sans-serif";
   const mono = "'JetBrains Mono', 'Courier New', monospace";
 
-  const Glyph = () => (
+  const glyph = (
     <>
       {/* ── JRB text ── */}
       <text
@@ -66,7 +66,7 @@ export function Logo({
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Jay-R Bayog — JRB logo mark"
       >
-        <Glyph />
+        {glyph}
       </svg>
     );
   }
@@ -79,7 +79,7 @@ export function Logo({
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Jay-R Bayog logo"
     >
-      <Glyph />
+      {glyph}
 
       {/* ── Name ── */}
       <text

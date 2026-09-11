@@ -1,610 +1,848 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useRef } from "react";
-import { motion, useInView, useScroll, useSpring } from "framer-motion";
 import dynamic from "next/dynamic";
-import VelocityMarquee from "@/app/components/scroll/VelocityMarquee";
-import Parallax from "@/app/components/scroll/Parallax";
-import PinnedHero from "@/app/components/scroll/PinnedHero";
-import HorizontalProjects from "@/app/components/scroll/HorizontalProjects";
-import PinnedContact from "@/app/components/scroll/PinnedContact";
+import { useEffect, useRef, useState } from "react";
 
-const ShaderBackground = dynamic(
-  () => import("@/app/components/webgl/ShaderBackground"),
-  { ssr: false },
+const AstronautScene = dynamic(
+  () => import("./components/webgl/AstronautScene"),
+  {
+    ssr: false,
+    loading: () => <p className="orbit-loading">Preparing your orbit…</p>,
+  },
 );
 
-// ─── Data ──────────────────────────────────────────────────────────────────
-
-const projects = [
+const selected = [
   {
-    num: "01",
-    title: "Kamee Fitness",
-    year: "2026",
-    desc: "Fitness tracking app with workout and run/walk logging, progress visualization, and goal setting. Built with React Native and Supabase for seamless cross-platform experience.",
-    stack: ["React Native", "Supabase", "NextJS"],
+    id: "01",
+    name: "Kamee Fitness",
+    category: "MOBILE APP · FITNESS",
+    className: "kamee",
+    headline: "A little stronger.\nEvery single day.",
+    description:
+      "A training companion that makes consistency feel achievable. Workouts, run tracking, and progress in one place.",
+    image: "/projects/kamee.png",
+    alt: "Kamee Fitness website with its turtle mascot, training plans, and workout features",
+    stack: ["React Native", "Supabase", "Next.js"],
     href: "https://kamee.fit/",
-    featured: true,
+    domain: "kamee.fit",
+    challenge:
+      "Build a fitness experience that connects daily activity with long-term progress, across mobile and the web.",
+    build:
+      "Workout and run/walk logging, progress visualization, and goal setting, backed by Supabase with a React Native mobile experience.",
   },
   {
-    num: "02",
-    title: "BetterSurallah",
-    year: "2026",
-    desc: "Citizen-built transparency platform for the municipality of Surallah — budgets, public documents, project funding, and a searchable directory of local officials.",
-    stack: ["Next.js", "Supabase", "TypeScript"],
+    id: "02",
+    name: "BetterSurallah",
+    category: "WEB PLATFORM · CIVIC TECH",
+    className: "surallah",
+    headline: "Public information.\nActually accessible.",
+    description:
+      "An independent window into my hometown. Bringing public documents, budgets, and local officials into one searchable place.",
+    image: "/projects/surallah.png",
+    alt: "BetterSurallah transparency platform showing public documents, projects, and officials",
+    stack: ["Next.js", "TypeScript", "Supabase"],
     href: "https://bettersurallah.org/",
-    featured: true,
+    domain: "bettersurallah.org",
+    challenge:
+      "Make scattered local government information easier for residents to find and understand.",
+    build:
+      "A citizen-built platform with budget and document access, project funding information, and a searchable directory of local officials.",
   },
   {
-    num: "03",
-    title: "EMBERS",
-    year: "2026",
-    desc: "Thoughtful journaling platform for capturing and sharing ideas. Real-time sync, clean and distraction-free.",
-    stack: ["Next.js", "Supabase", "TypeScript"],
+    id: "03",
+    name: "EMBERS",
+    category: "WEB EXPERIENCE · JOURNALING",
+    className: "embers",
+    headline: "Some thoughts\ndeserve a place.",
+    description:
+      "A quiet space for capturing and sharing ideas. Built around thoughtful writing, real-time sync, and room to reflect.",
+    image: "/projects/embers.png",
+    alt: "Embers welcome screen, a minimal space to light your thoughts",
+    stack: ["Next.js", "TypeScript", "Supabase"],
     href: "https://www.embersthoughts.com/",
-    featured: true,
+    domain: "embersthoughts.com",
+    challenge:
+      "Give small, unfinished thoughts a home without a noisy or distracting interface.",
+    build:
+      "A focused journaling experience for capturing and sharing ideas, with real-time sync using Next.js and Supabase.",
   },
+];
+
+const experiments = [
   {
-    num: "04",
-    title: "Talinhaga",
-    year: "2026",
-    desc: "Minimalist blog platform for stories, poems, and essays. Optimized for focused reading.",
-    stack: ["Next.js", "Supabase", "TypeScript"],
-    href: "https://talinhaga.vercel.app/",
-  },
-  {
-    num: "05",
-    title: "Bemy",
-    year: "2026",
-    desc: "Interactive Valentine's app for personalized greetings. Designed, built, and deployed in a single day.",
-    stack: ["Next.js", "TypeScript"],
-    href: "https://bemy-web-app.vercel.app/",
-  },
-  {
-    num: "06",
-    title: "Cityland",
-    year: "2026",
-    desc: "Real estate listing platform for browsing and managing property listings.",
-    stack: ["Next.js", "Supabase", "TypeScript"],
-    href: "https://realstate-liard.vercel.app/",
-  },
-  {
-    num: "07",
-    title: "KaraParty",
-    year: "2026",
-    desc: "AI-powered karaoke web app that separates vocal tracks and generates synced lyrics for any song. Built on microservices with Azure AI and ChatGPT.",
-    stack: ["C# .NET 10", "Next.js", "Azure", "ChatGPT API", "Microservices"],
+    name: "KaraParty",
+    type: "AI",
+    description: "Vocal separation. Synced lyrics. Your next karaoke night.",
+    stack: ".NET · Azure AI · Next.js",
     href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
   },
   {
-    num: "08",
-    title: "Bayani TD",
-    year: "2026",
-    desc: "Filipino hero-themed tower defense game playable in the browser. Canvas gameplay built on Phaser 3, with a Supabase backend.",
-    stack: ["Phaser 3", "TypeScript", "Vite", "Supabase"],
+    name: "Bayani TD",
+    type: "Games",
+    description: "Filipino heroes meet browser-based tower defense.",
+    stack: "Phaser 3 · TypeScript · Supabase",
     href: "https://bayani.jayrb.dev/",
+  },
+  {
+    name: "Talinhaga",
+    type: "Web",
+    description: "A place for stories, poems, and a slower kind of reading.",
+    stack: "Next.js · Supabase",
+    href: "https://talinhaga.vercel.app/",
+  },
+  {
+    name: "Bemy",
+    type: "Web",
+    description: "A personal Valentine, built and shipped in a day.",
+    stack: "Next.js · TypeScript",
+    href: "https://bemy-web-app.vercel.app/",
+  },
+  {
+    name: "Cityland",
+    type: "Web",
+    description: "An easier way to explore and manage property listings.",
+    stack: "Next.js · Supabase",
+    href: "https://realstate-liard.vercel.app/",
   },
 ];
 
-const email = "bayogjayr@gmail.com";
-
-const skills = [
-  "C# / .NET", "React / Next.js", "Azure Cloud",
-  "REST APIs", "Microservices", "Docker",
-  "CI/CD", "PostgreSQL", "AI Tools",
-];
-
-const techStack = [
-  { name: "C#",         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" },
-  { name: ".NET",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg" },
-  { name: "React",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-  { name: "Next.js",    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg", invert: true },
-  { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
-  { name: "Azure",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
-  { name: "Docker",     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
-  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-  { name: "Supabase",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" },
-  { name: "MySQL",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
-  { name: "Redis",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
-  { name: "RabbitMQ",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rabbitmq/rabbitmq-original.svg" },
-  { name: "MSSQL",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg", invert: true },
-  { name: "Git",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
-  { name: "Selenium",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" },
-];
-
-const tickerItems = [
-  "C# .NET", "React", "Next.js", "TypeScript", "Azure",
-  "REST APIs", "Microservices", "Docker", "PostgreSQL",
-  "Supabase", "Redis", "RabbitMQ", "Git", "CI/CD", "AI Tools",
-];
-
-const timeline = [
+const experience = [
   {
-    title: "Software Engineer",
-    place: "DXC Technologies",
-    time: "Sept 2025 — Present",
-    desc: "Building and maintaining scalable .NET and React applications. Shipping cloud-native solutions on Azure with robust CI/CD pipelines.",
+    company: "DXC Technologies",
+    role: "Software Engineer",
+    date: "SEP 2025 — PRESENT",
+    description:
+      ".NET and React applications, Azure cloud solutions, and the pipelines that keep them shipping.",
     current: true,
   },
   {
-    title: ".NET Developer",
-    place: "Smartmoneta",
-    time: "Sept 2024 — May 2025",
-    desc: "Maintained and enhanced a C#/.NET payment gateway. Delivered fintech automations and technical application support.",
-    current: false,
+    company: "Smartmoneta",
+    role: ".NET Developer",
+    date: "SEP 2024 — MAY 2025",
+    description:
+      "Payment gateway development, fintech automations, and technical application support.",
   },
   {
-    title: "Software Engineer",
-    place: "Flexisource IT",
-    time: "Jan 2023 — Sept 2024",
-    desc: "Maintained a SaaS platform on C#/.NET and React. Improved APIs and shipped product features across the full stack.",
-    current: false,
+    company: "Flexisource IT",
+    role: "Software Engineer",
+    date: "JAN 2023 — SEP 2024",
+    description:
+      "Full-stack SaaS development with C#/.NET and React. Better APIs, new features, steady improvements.",
   },
   {
-    title: "Software Engineer",
-    place: "Palawan Pawnshop Group",
-    time: "Aug 2019 — Dec 2022",
-    desc: "Built notification and reporting systems with .NET REST APIs and React. Enforced coding standards and managed production deployments.",
-    current: false,
+    company: "Palawan Pawnshop Group",
+    role: "Software Engineer",
+    date: "AUG 2019 — DEC 2022",
+    description:
+      "Notification and reporting systems, REST APIs, and production deployments.",
   },
 ];
+const email = "bayogjayr@gmail.com";
 
-// ─── Animation helpers ─────────────────────────────────────────────────────
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-function Reveal({
-  children,
-  delay = 0,
-  className = "",
-  x = 0,
-  y = 20,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
-  x?: number;
-  y?: number;
-}) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x, y }}
-      animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: EASE }}
-      className={className}
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
     >
-      {children}
-    </motion.div>
+      <path
+        d={diagonal ? "M6 18 18 6M6 6h12v12" : "M4 12h15m-6-6 6 6-6 6"}
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
-
-function TimelineEntry({ item, delay }: { item: typeof timeline[number]; delay: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+function OrbitMark() {
   return (
-    <Reveal delay={delay}>
-      <div className="relative pl-8" ref={ref}>
-        <div className={`tl-dot${item.current ? " current" : ""}${inView ? "" : ""}`} />
-        <div className="mb-1 flex flex-wrap items-baseline justify-between gap-3">
-          <span className="font-mono text-xs tracking-widest uppercase" style={{ color: "var(--orange)" }}>
-            {item.place}
-          </span>
-          <span className="font-mono text-xs" style={{ color: "var(--dim)" }}>{item.time}</span>
-        </div>
-        <div className="mb-2 flex items-center gap-3">
-          <h3 className="font-display text-2xl font-bold uppercase tracking-wide" style={{ color: "var(--text)" }}>
-            {item.title}
-          </h3>
-          {item.current && (
-            <span className="font-mono text-xs px-2 py-0.5" style={{ border: "1px solid var(--orange)", color: "var(--orange)" }}>
-              NOW
-            </span>
-          )}
-        </div>
-        <p className="font-body max-w-lg text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
-          {item.desc}
-        </p>
-      </div>
-    </Reveal>
+    <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
+      <circle cx="22" cy="22" r="10" stroke="currentColor" strokeWidth="1.4" />
+      <ellipse
+        cx="22"
+        cy="22"
+        rx="22"
+        ry="7"
+        transform="rotate(-35 22 22)"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
+      <circle cx="37" cy="11" r="3" fill="currentColor" />
+    </svg>
   );
 }
-
-// ─── Page ──────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 35 });
+  const [orbit, setOrbit] = useState(false);
+  const [motionPaused, setMotionPaused] = useState(false);
+  const [filter, setFilter] = useState("All");
+  const [menu, setMenu] = useState(false);
+  const [active, setActive] = useState("");
+  const [copyStatus, setCopyStatus] = useState("");
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const visibleExperiments = experiments.filter(
+    (project) => filter === "All" || project.type === filter,
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("is-revealed");
+        });
+      },
+      { threshold: 0.08 },
+    );
+    document
+      .querySelectorAll("[data-reveal]")
+      .forEach((element) => observer.observe(element));
+    const sections = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-15% 0px -65% 0px" },
+    );
+    document
+      .querySelectorAll("main > section[id]")
+      .forEach((element) => sections.observe(element));
+    return () => {
+      observer.disconnect();
+      sections.disconnect();
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!menu) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenu(false);
+        menuButton.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [menu]);
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopyStatus("Email copied");
+    } catch {
+      setCopyStatus("Copy unavailable. Use the email link.");
+    }
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+    copyTimer.current = setTimeout(() => setCopyStatus(""), 3500);
+  }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
-
-      {/* Progress bar */}
-      <motion.div className="progress-bar" style={{ scaleX, width: "100%" }} />
-
-      {/* ══ HEADER ══════════════════════════════════════════════ */}
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: EASE }}
-        className="sticky top-0 z-50 backdrop-blur-md"
-        style={{ borderBottom: "1px solid var(--border)", background: "rgba(12,10,8,0.85)" }}
-      >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <span className="font-mono text-xs tracking-[0.3em] uppercase" style={{ color: "var(--orange)" }}>jayrb.dev</span>
-
-          <nav className="hidden items-center gap-8 md:flex">
-            {["About", "Projects", "Stack", "Experience", "Contact"].map((item, i) => (
-              <motion.a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.05, duration: 0.4, ease: EASE }}
-                className="font-mono text-xs tracking-widest uppercase transition-colors"
-                style={{ color: "var(--muted)" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-                onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-              >
-                {item}
-              </motion.a>
+    <div className={`portfolio ${motionPaused ? "motion-paused" : ""}`}>
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
+      <header className="site-header">
+        <a className="wordmark" href="#home" aria-label="Jay-R Bayog, home">
+          <OrbitMark />
+          <span>
+            JAY-R BAYOG<span className="wordmark-sub">SOFTWARE ENGINEER</span>
+          </span>
+        </a>
+        <nav className="desktop-nav" aria-label="Main navigation">
+          {[
+            ["projects", "Work"],
+            ["about", "About"],
+            ["experience", "Experience"],
+          ].map(([id, label]) => (
+            <a
+              key={id}
+              href={`#${id}`}
+              aria-current={active === id ? "location" : undefined}
+            >
+              <span className="nav-dot" />
+              {label}
+            </a>
+          ))}
+        </nav>
+        <a className="header-contact" href="#contact">
+          Let’s talk <Arrow diagonal />
+        </a>
+        <button
+          className="menu-toggle"
+          type="button"
+          ref={menuButton}
+          aria-expanded={menu}
+          aria-controls="mobile-nav"
+          onClick={() => setMenu(!menu)}
+        >
+          {menu ? "Close −" : "Menu +"}
+        </button>
+        {menu && (
+          <nav
+            id="mobile-nav"
+            className="mobile-nav"
+            aria-label="Mobile navigation"
+          >
+            {[
+              ["projects", "Selected work"],
+              ["about", "About me"],
+              ["experience", "Experience"],
+              ["contact", "Contact"],
+            ].map(([id, label]) => (
+              <a key={id} href={`#${id}`} onClick={() => setMenu(false)}>
+                {label}
+                <Arrow diagonal />
+              </a>
             ))}
           </nav>
+        )}
+      </header>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.45, duration: 0.5 }}
-          >
-            <Link href="#contact" className="btn-primary">Hire me →</Link>
-          </motion.div>
-        </div>
-      </motion.header>
-
-      <main className="mx-auto max-w-6xl px-6 pb-32">
-
-        {/* ══ HERO ════════════════════════════════════════════════ */}
-        <PinnedHero>
-        <section className="relative isolate flex min-h-[92vh] flex-col justify-center pt-10 pb-10">
-          <ShaderBackground />
-
-          {/* Status */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
-            className="mb-8 inline-flex w-fit items-center gap-2.5"
-          >
-            <div className="status-dot" />
-            <span className="font-mono text-xs tracking-[0.25em] uppercase" style={{ color: "var(--muted)" }}>
-              Available for roles
-            </span>
-          </motion.div>
-
-          {/* Name — each word clips up */}
-          <div className="mb-8" data-hero-name>
-            {[
-              { text: "JAY-R",  color: "var(--text)" },
-              { text: "BAYOG.", color: "var(--orange)" },
-            ].map(({ text, color }, i) => (
-              <div key={text} className="overflow-hidden leading-none">
-                <motion.div
-                  initial={{ y: "110%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 1, delay: 0.3 + i * 0.15, ease: EASE }}
-                >
-                  <span
-                    className="font-display block font-black uppercase"
-                    style={{
-                      fontSize: "clamp(5rem, 18vw, 14rem)",
-                      lineHeight: 0.88,
-                      letterSpacing: "-0.01em",
-                      color,
-                    }}
-                  >
-                    {text}
-                  </span>
-                </motion.div>
-              </div>
-            ))}
+      <main id="main">
+        <section className="hero" id="home" aria-labelledby="hero-title">
+          <div className="hero-grid" aria-hidden="true" />
+          <div className="hero-glow" aria-hidden="true" />
+          <div className="hero-topline">
+            <p className="eyebrow">
+              <span className="status-dot" /> OPEN TO NEW OPPORTUNITIES
+            </p>
+            <p className="eyebrow">
+              BASED IN THE PHILIPPINES <span className="tiny-star">✳︎</span>
+            </p>
           </div>
-
-          {/* Animated rule */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.1, delay: 0.75, ease: EASE }}
-            className="mb-8 rule"
-            style={{ transformOrigin: "left" }}
-          />
-
-          {/* Tagline + description */}
-          <div className="grid gap-6 lg:grid-cols-[1fr_1fr] mb-10" data-hero-body>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.9, ease: EASE }}
-              className="font-body text-lg leading-snug"
-              style={{ color: "var(--muted)" }}
-            >
-              Full-stack engineer —{" "}
-              <span style={{ color: "var(--text)" }}>.NET backends</span>,{" "}
-              <span style={{ color: "var(--text)" }}>React frontends</span>,{" "}
-              Azure cloud.
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.0, ease: EASE }}
-              className="font-body text-sm leading-relaxed"
-              style={{ color: "var(--muted)" }}
-            >
-              Six years building production systems across fintech, SaaS, and
-              enterprise. I write clean code, ship on time, and make things
-              that don&apos;t break. I leverage AI tools like Claude to move
-              faster and build smarter.
-            </motion.p>
+          <div className="hero-heading">
+            <p className="eyebrow hero-kicker">
+              A LITTLE CURIOSITY GOES A LONG WAY.
+            </p>
+            <h1 id="hero-title">
+              <span>SERIOUS CODE.</span>
+              <span className="outline-word">CURIOUS MIND.</span>
+            </h1>
           </div>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.1, ease: EASE }}
-            className="mb-10 flex flex-wrap items-center gap-4"
-          >
-            <Link href="#projects" className="btn-primary">View work →</Link>
-            <a
-              href="/Resume-Bayog_JayR.pdf"
-              download target="_blank" rel="noreferrer"
-              className="btn-outline"
-            >
-              Resume ↓
+          <div className={`hero-art ${orbit ? "is-orbit" : ""}`}>
+            <div className="hero-orbit-ring" aria-hidden="true" />
+            {orbit ? (
+              <AstronautScene />
+            ) : (
+              <Image
+                src="/images/explorer.png"
+                alt="An astronaut reaching forward in zero gravity, with a reflective black visor and blue rim lighting"
+                fill
+                priority
+                sizes="(max-width: 700px) 95vw, 55vw"
+                className="explorer-image"
+              />
+            )}
+            {!orbit && (
+              <span className="art-annotation">
+                <span /> KEEP EXPLORING.
+              </span>
+            )}
+          </div>
+          <div className="hero-summary">
+            <p>
+              I’m Jay-R. I turn complex problems into
+              <br className="desktop-break" /> thoughtful software, from the
+              first idea
+              <br className="desktop-break" /> to the systems that keep it
+              running.
+            </p>
+            <a href="#projects" className="button button-accent">
+              Explore my work <Arrow diagonal />
             </a>
-            <div className="flex items-center gap-5" style={{ marginLeft: "4px" }}>
-              {[
-                ["LinkedIn", "https://www.linkedin.com"],
-                ["GitHub",   "https://github.com"],
-                ["Email",    `mailto:${email}`],
-              ].map(([label, href]) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noreferrer" : undefined}
-                  className="font-mono text-xs tracking-widest uppercase transition-colors"
-                  style={{ color: "var(--dim)" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "var(--orange)")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "var(--dim)")}
-                >
-                  {label}
-                </a>
-              ))}
+            <a href="/Resume-Bayog_JayR.pdf" className="text-link" download>
+              Grab my résumé <span>↓</span>
+            </a>
+          </div>
+          <div className="hero-mode">
+            <span className="eyebrow">CHOOSE YOUR VIEW</span>
+            <div
+              className="view-switch"
+              role="group"
+              aria-label="Astronaut view"
+            >
+              <button
+                type="button"
+                aria-pressed={!orbit}
+                onClick={() => setOrbit(false)}
+              >
+                01 / Cinematic
+              </button>
+              <button
+                type="button"
+                aria-pressed={orbit}
+                onClick={() => setOrbit(true)}
+              >
+                02 / Live 3D <span>↗</span>
+              </button>
             </div>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.2, ease: EASE }}
-            className="flex flex-wrap gap-10 pt-8"
-            style={{ borderTop: "1px solid var(--border)" }}
-          >
-            {[["6+", "Years exp"], ["4", "Companies"], ["5+", "Side projects"]].map(([n, l]) => (
-              <div key={l}>
-                <div
-                  className="font-display font-black uppercase"
-                  style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", lineHeight: 1, color: "var(--orange)" }}
-                >
-                  {n}
-                </div>
-                <div className="font-mono text-xs tracking-widest uppercase mt-1" style={{ color: "var(--dim)" }}>
-                  {l}
-                </div>
-              </div>
-            ))}
-          </motion.div>
+            <button
+              className="motion-toggle"
+              type="button"
+              aria-pressed={motionPaused}
+              onClick={() => setMotionPaused(!motionPaused)}
+            >
+              {motionPaused
+                ? "▶ Resume artwork motion"
+                : "Ⅱ Pause artwork motion"}
+            </button>
+          </div>
+          <div className="hero-foot">
+            <span>INDEPENDENT THINKING. PRODUCTION EXPERIENCE.</span>
+            <a href="#projects">
+              SCROLL TO EXPLORE <span>↓</span>
+            </a>
+            <span>PORTFOLIO / 2026</span>
+          </div>
         </section>
-        </PinnedHero>
 
-        {/* ══ TICKER ══════════════════════════════════════════════ */}
-        <div className="mb-24">
-          <VelocityMarquee items={tickerItems} />
+        <div className="capability-strip" aria-label="Core technologies">
+          <span>IDEA → INTERFACE → INFRASTRUCTURE</span>
+          <div>
+            <span>C# / .NET</span>
+            <i>✳︎</i>
+            <span>REACT / NEXT.JS</span>
+            <i>✳︎</i>
+            <span>AZURE</span>
+            <i>✳︎</i>
+            <span>FULL-STACK THINKING</span>
+          </div>
         </div>
 
-        {/* ══ ABOUT ═══════════════════════════════════════════════ */}
-        <section id="about" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
-          <Reveal>
-            <p className="label mb-6">01 / About</p>
-          </Reveal>
-
-          <div className="grid gap-14 lg:grid-cols-[1fr_1.2fr]">
+        <section
+          id="projects"
+          className="work section-shell"
+          aria-labelledby="work-title"
+        >
+          <div className="section-heading" data-reveal>
+            <p className="eyebrow">01 / SELECTED WORK</p>
             <div>
-              <Reveal delay={0.1}>
-                <h2
-                  className="font-display font-black uppercase mb-6"
-                  style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, letterSpacing: "-0.01em", color: "var(--text)" }}
+              <h2 id="work-title">
+                Less talk.
+                <br />
+                <span className="serif-word">More launched.</span>
+              </h2>
+              <p>
+                A few things I’ve taken from
+                <br />
+                “what if” to out in the world.
+              </p>
+            </div>
+            <span className="section-counter">(03)</span>
+          </div>
+          <div className="featured-work">
+            {selected.map((project) => (
+              <article
+                key={project.id}
+                className={`work-project ${project.className}`}
+                data-reveal
+              >
+                <a
+                  className="project-visual"
+                  href={project.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Visit ${project.name} (opens in a new tab)`}
                 >
-                  Backend-solid,{" "}
-                  <span style={{ color: "var(--orange)" }}>frontend-sharp.</span>
-                </h2>
-              </Reveal>
-
-              <Reveal delay={0.18}>
-                <Parallax speed={0.25}>
-                  <div className="mb-4 overflow-hidden" style={{ width: 72, height: 72, border: "1px solid var(--border-md)" }}>
+                  <div className="visual-topline">
+                    <span>{project.category}</span>
+                    <span>PROJECT / {project.id}</span>
+                  </div>
+                  <div className="project-window">
+                    <div className="browser-bar">
+                      <span>
+                        <i />
+                        <i />
+                        <i />
+                      </span>
+                      <span>{project.domain}</span>
+                      <span>↗</span>
+                    </div>
                     <Image
-                      src="/avatar.png"
-                      alt="Jay-R Bayog"
-                      width={72}
-                      height={72}
-                      className="w-full h-full object-cover"
-                      style={{ filter: "grayscale(30%) sepia(10%)" }}
-                      priority
+                      src={project.image}
+                      alt={project.alt}
+                      width={1440}
+                      height={1000}
+                      sizes="(max-width: 700px) 92vw, 80vw"
                     />
                   </div>
-                </Parallax>
-              </Reveal>
+                  <span className="visual-open">
+                    Explore project <Arrow diagonal />
+                  </span>
+                  <span className="visual-watermark" aria-hidden="true">
+                    {project.id}
+                  </span>
+                </a>
+                <div className="project-information">
+                  <div className="project-title">
+                    <span className="eyebrow">
+                      {project.id} / {project.name}
+                    </span>
+                    <h3>
+                      {project.headline.split("\n").map((line) => (
+                        <span key={line}>{line}</span>
+                      ))}
+                    </h3>
+                  </div>
+                  <div className="project-story">
+                    <p>{project.description}</p>
+                    <ul
+                      className="tech-tags"
+                      aria-label={`${project.name} technologies`}
+                    >
+                      {project.stack.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                    <details className="project-details">
+                      <summary>
+                        Behind the build <span>+</span>
+                      </summary>
+                      <div>
+                        <h4>The idea</h4>
+                        <p>{project.challenge}</p>
+                        <h4>The build</h4>
+                        <p>{project.build}</p>
+                        <a href={project.href} target="_blank" rel="noreferrer">
+                          Visit live project <Arrow diagonal />
+                        </a>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
 
-              <Reveal delay={0.22}>
-                <p className="font-body text-sm leading-relaxed mb-4" style={{ color: "var(--muted)" }}>
-                  I bridge .NET backends with React frontends — keeping APIs clean,
-                  deployments stable, and experiences fast. I enjoy untangling
-                  legacy systems and shipping features that last.
-                </p>
-                <p className="font-body text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
-                  I use AI tools — including Claude — as part of my daily workflow
-                  to prototype faster, debug smarter, and document better.
-                </p>
-              </Reveal>
+        <section
+          className="lab section-shell"
+          id="lab"
+          aria-labelledby="lab-title"
+        >
+          <div className="lab-heading" data-reveal>
+            <div>
+              <p className="eyebrow">THE SIDE QUESTS</p>
+              <h2 id="lab-title">
+                Curiosity doesn’t
+                <br />
+                <span className="serif-word">clock out.</span>
+              </h2>
             </div>
+            <p>
+              Games, experiments, and small ideas
+              <br />
+              that became real things.
+            </p>
+          </div>
+          <div
+            className="project-filters"
+            role="group"
+            aria-label="Filter side projects"
+          >
+            {["All", "Web", "AI", "Games"].map((item) => (
+              <button
+                type="button"
+                key={item}
+                aria-pressed={filter === item}
+                onClick={() => setFilter(item)}
+              >
+                {item}
+                {item === "All" && <span>05</span>}
+              </button>
+            ))}
+          </div>
+          <p className="sr-only" role="status">
+            Showing {visibleExperiments.length} side projects
+          </p>
+          <div className="lab-list">
+            {visibleExperiments.map((project) => (
+              <a
+                key={project.name}
+                className="lab-row"
+                href={project.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="lab-type">{project.type}</span>
+                <div>
+                  <h3>{project.name}</h3>
+                  <p>{project.description}</p>
+                </div>
+                <span className="lab-stack">{project.stack}</span>
+                <Arrow diagonal />
+              </a>
+            ))}
+          </div>
+        </section>
 
-            <div className="flex flex-col gap-3">
-              <Reveal delay={0.1}>
-                <p className="font-mono text-xs tracking-widest uppercase mb-3" style={{ color: "var(--dim)" }}>
-                  Core skills
+        <section id="about" className="about" aria-labelledby="about-title">
+          <div className="section-shell">
+            <div className="about-top" data-reveal>
+              <p className="eyebrow">02 / THE HUMAN BEHIND THE CODE</p>
+              <OrbitMark />
+            </div>
+            <div className="about-grid">
+              <div className="portrait-panel" data-reveal>
+                <div className="portrait-frame">
+                  <Image
+                    src="/avatar.png"
+                    alt="Jay-R Bayog"
+                    width={700}
+                    height={800}
+                    sizes="(max-width: 700px) 80vw, 32vw"
+                  />
+                  <span className="portrait-corner corner-tl" />
+                  <span className="portrait-corner corner-br" />
+                  <span className="portrait-label">JRB / EARTH CREW</span>
+                </div>
+                <div className="portrait-caption">
+                  <span>JAY-R BAYOG</span>
+                  <span>PHILIPPINES ↗</span>
+                </div>
+              </div>
+              <div className="about-copy" data-reveal>
+                <h2 id="about-title">
+                  Head in space.
+                  <br />
+                  <span className="serif-word">Feet on the ground.</span>
+                </h2>
+                <p className="about-lead">
+                  I like big ideas. I like making them work even more.
                 </p>
-              </Reveal>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((s, i) => (
-                  <Reveal key={s} delay={0.12 + i * 0.04}>
-                    <div className="skill-tag">{s}</div>
-                  </Reveal>
-                ))}
+                <p>
+                  I’m a full-stack software engineer working across .NET, React,
+                  and Azure. Since 2019, I’ve built systems in fintech, SaaS,
+                  and enterprise, and made room for projects that mean something
+                  to me.
+                </p>
+                <p>
+                  A fitness app. A clearer view of my hometown. A space for
+                  someone’s thoughts. Different problems, same instinct:
+                  understand the people, untangle the complexity, and build
+                  something useful.
+                </p>
+                <a href="/Resume-Bayog_JayR.pdf" download className="text-link">
+                  The longer version? My résumé <Arrow diagonal />
+                </a>
+                <div className="about-facts">
+                  <div>
+                    <strong>2019</strong>
+                    <span>BUILDING SINCE</span>
+                  </div>
+                  <div>
+                    <strong>04</strong>
+                    <span>COMPANIES</span>
+                  </div>
+                  <div>
+                    <strong>08</strong>
+                    <span>PERSONAL PROJECTS</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ══ PROJECTS ════════════════════════════════════════════ */}
-        <HorizontalProjects projects={projects} />
-
-        {/* ══ STACK ═══════════════════════════════════════════════ */}
-        <section id="stack" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
-          <Reveal>
-            <p className="label mb-6">03 / Stack</p>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h2
-              className="font-display font-black uppercase mb-10"
-              style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, color: "var(--text)" }}
-            >
-              Technologies.
+        <section
+          className="toolkit section-shell"
+          id="stack"
+          aria-labelledby="toolkit-title"
+        >
+          <div className="toolkit-heading" data-reveal>
+            <p className="eyebrow">03 / HOW I BUILD</p>
+            <h2 id="toolkit-title">
+              From the interface
+              <br />
+              <span className="serif-word">to the infrastructure.</span>
             </h2>
-          </Reveal>
-
-          <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
-            {techStack.map((t, i) => (
-              <Reveal key={t.name} delay={0.04 + i * 0.03}>
-                <div className="tech-chip">
-                  <Image
-                    src={t.icon}
-                    alt={t.name}
-                    width={32}
-                    height={32}
-                    className={t.invert ? "invert opacity-75" : ""}
-                    unoptimized
-                  />
-                  <span className="font-mono text-center" style={{ fontSize: "0.6rem", color: "var(--muted)", letterSpacing: "0.04em" }}>
-                    {t.name}
+          </div>
+          <div className="capability-grid">
+            {[
+              {
+                n: "01",
+                title: "Make it work.",
+                description:
+                  "Clear APIs, dependable services, and data that stays connected.",
+                tools:
+                  "C# / .NET · REST APIs · Microservices · PostgreSQL · SQL Server · Redis",
+                symbol: "{ }",
+              },
+              {
+                n: "02",
+                title: "Make it feel right.",
+                description:
+                  "Responsive interfaces and thoughtful interactions, across web and mobile.",
+                tools:
+                  "React · Next.js · TypeScript · React Native · Tailwind CSS",
+                symbol: "↗",
+              },
+              {
+                n: "03",
+                title: "Keep it running.",
+                description:
+                  "Repeatable deployments and the infrastructure behind the experience.",
+                tools: "Azure · Docker · CI/CD · Git · Supabase · RabbitMQ",
+                symbol: "◎",
+              },
+            ].map((item) => (
+              <article className="capability" key={item.n} data-reveal>
+                <div className="capability-top">
+                  <span>{item.n}</span>
+                  <span className="capability-symbol" aria-hidden="true">
+                    {item.symbol}
                   </span>
                 </div>
-              </Reveal>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <div className="capability-tools">{item.tools}</div>
+              </article>
             ))}
           </div>
         </section>
 
-        {/* ══ EXPERIENCE ══════════════════════════════════════════ */}
-        <section id="experience" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
-          <Reveal>
-            <p className="label mb-6">04 / Experience</p>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h2
-              className="font-display font-black uppercase mb-14"
-              style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, color: "var(--text)" }}
-            >
-              Where I&apos;ve built.
+        <section
+          id="experience"
+          className="experience section-shell"
+          aria-labelledby="experience-title"
+        >
+          <div className="experience-intro" data-reveal>
+            <p className="eyebrow">04 / FLIGHT LOG</p>
+            <h2 id="experience-title">
+              Good work.
+              <br />
+              <span className="serif-word">Built over time.</span>
             </h2>
-          </Reveal>
-
-          <div className="relative">
-            <div
-              className="absolute bottom-0 left-0 top-0 w-px"
-              style={{ background: "linear-gradient(to bottom, var(--orange), var(--border) 80%, transparent)" }}
-            />
-            <div className="space-y-12">
-              {timeline.map((item, i) => (
-                <TimelineEntry key={item.place} item={item} delay={0.06 + i * 0.1} />
-              ))}
-            </div>
+            <p>
+              Different teams, different challenges.
+              <br />A growing perspective on what
+              <br />
+              makes software last.
+            </p>
+            <a className="text-link" href="/Resume-Bayog_JayR.pdf" download>
+              Download résumé <span>↓</span>
+            </a>
+          </div>
+          <div className="experience-list">
+            {experience.map((item) => (
+              <article
+                key={item.company}
+                className="experience-item"
+                data-reveal
+              >
+                <div className="experience-date">
+                  <span>{item.date}</span>
+                  {item.current && (
+                    <span className="current-role">
+                      <i /> CURRENT
+                    </span>
+                  )}
+                </div>
+                <h3>{item.company}</h3>
+                <h4>{item.role}</h4>
+                <p>{item.description}</p>
+              </article>
+            ))}
           </div>
         </section>
 
-        {/* ══ CONTACT ═════════════════════════════════════════════ */}
-        <PinnedContact>
-        <section id="contact" className="py-20" style={{ borderTop: "1px solid var(--border)" }}>
-          <Reveal>
-            <p className="label mb-8">05 / Contact</p>
-          </Reveal>
-
-          <div className="overflow-hidden mb-8">
-            {["Let's build", "something", "great."].map((line, i) => (
-              <div key={line} className="overflow-hidden">
-                <span
-                  data-contact-line
-                  className="font-display font-black uppercase block"
-                  style={{
-                    fontSize: "clamp(3rem, 9vw, 7rem)",
-                    lineHeight: 0.92,
-                    letterSpacing: "-0.01em",
-                    color: i === 2 ? "var(--orange)" : "var(--text)",
-                  }}
+        <section
+          id="contact"
+          className="contact"
+          aria-labelledby="contact-title"
+        >
+          <div className="contact-orbit" aria-hidden="true" />
+          <div className="section-shell">
+            <div className="contact-top">
+              <p className="eyebrow">
+                <span className="status-dot" /> OPEN FOR THE NEXT CHAPTER
+              </p>
+              <span className="eyebrow">05 / SAY HELLO</span>
+            </div>
+            <div className="contact-main" data-reveal>
+              <h2 id="contact-title">
+                HAVE SOMETHING
+                <br />
+                <span>IN MIND?</span>
+              </h2>
+              <a
+                href={`mailto:${email}`}
+                className="contact-arrow"
+                aria-label="Email Jay-R Bayog"
+              >
+                <Arrow diagonal />
+              </a>
+            </div>
+            <div className="contact-bottom">
+              <p>
+                A role, a project, or an interesting idea.
+                <br />
+                I’d love to hear what you’re thinking.
+              </p>
+              <div className="email-area">
+                <a href={`mailto:${email}`} className="email-link">
+                  {email}
+                </a>
+                <button
+                  type="button"
+                  onClick={copyEmail}
+                  aria-label="Copy email address"
                 >
-                  {line}
+                  Copy ↗
+                </button>
+                <span className="copy-status" role="status">
+                  {copyStatus}
                 </span>
               </div>
-            ))}
-          </div>
-
-          <Reveal delay={0.2}>
-            <p className="font-body text-sm mb-10 max-w-sm leading-relaxed" style={{ color: "var(--muted)" }}>
-              Open to full-time roles, freelance work, and interesting side
-              projects. I respond within one business day.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.3}>
-            <div className="flex flex-wrap gap-4">
-              <a href={`mailto:${email}`} className="btn-primary">
-                Email me →
-              </a>
-              <a
-                href="/Resume-Bayog_JayR.pdf"
-                download target="_blank" rel="noreferrer"
-                className="btn-outline"
-              >
-                Download Resume
-              </a>
             </div>
-          </Reveal>
+          </div>
         </section>
-        </PinnedContact>
       </main>
-
-      {/* ══ FOOTER ══════════════════════════════════════════════ */}
-      <footer style={{ borderTop: "1px solid var(--border)" }} className="py-8">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-          <span className="font-mono text-xs tracking-[0.3em] uppercase" style={{ color: "var(--dim)" }}>
-            Jay-R Bayog · {new Date().getFullYear()}
-          </span>
-          <span className="font-mono text-xs" style={{ color: "var(--orange)" }}>Built with Next.js</span>
+      <footer className="site-footer">
+        <div className="footer-top">
+          <a href="#home" className="wordmark">
+            <OrbitMark />
+            <span>JAY-R BAYOG</span>
+          </a>
+          <p>Always curious. Still exploring.</p>
+          <a href="#home" className="back-top">
+            Back to top ↑
+          </a>
+        </div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} JAY-R BAYOG</span>
+          <span>DESIGNED ON EARTH. BUILT WITH INTENTION.</span>
+          <details className="credits">
+            <summary>Credits +</summary>
+            <p>
+              Astronaut hero artwork generated with AI. Interactive 3D astronaut
+              by Poly,{" "}
+              <a
+                href="https://creativecommons.org/licenses/by/2.0/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                CC BY 2.0
+              </a>
+              , via{" "}
+              <a
+                href="https://github.com/google/model-viewer/blob/master/packages/modelviewer.dev/ATTRIBUTIONS.md"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Google model-viewer
+              </a>
+              . Lighting and presentation adapted. Project images captured from
+              their public websites.
+            </p>
+          </details>
         </div>
       </footer>
     </div>

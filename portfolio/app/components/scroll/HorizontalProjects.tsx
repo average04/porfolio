@@ -25,7 +25,7 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
     () => {
       // Tailwind `lg:` is min-width:1024px; gate the pin on the same boundary
       // so 1024px (e.g. iPad landscape) gets the desktop layout WITH scroll.
-      if (reduced || window.innerWidth < 1024) return;
+      if (reduced) return;
       const trackEl = track.current;
       const sectionEl = section.current;
       if (!trackEl || !sectionEl) return;
@@ -33,7 +33,8 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
       // Exact horizontal overflow of the track, container-agnostic.
       const distance = () => trackEl.scrollWidth - trackEl.clientWidth;
 
-      gsap.to(trackEl, {
+      const media = gsap.matchMedia();
+      media.add("(min-width: 1024px)", () => { gsap.to(trackEl, {
         x: () => -distance(),
         ease: "none",
         scrollTrigger: {
@@ -46,7 +47,8 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
-      });
+      }); });
+      return () => media.revert();
     },
     { scope: section, dependencies: [reduced, projects.length] },
   );
@@ -55,7 +57,7 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
     <section
       id="projects"
       ref={section}
-      className="lg:h-screen lg:overflow-hidden py-20 lg:py-0"
+      className={reduced ? "py-20" : "lg:h-screen lg:overflow-hidden py-20 lg:py-0"}
       style={{ borderTop: "1px solid var(--border)" }}
     >
       <div className="lg:h-full lg:flex lg:flex-col lg:justify-center">
@@ -64,12 +66,12 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
           className="font-display font-black uppercase mb-10"
           style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", lineHeight: 0.95, color: "var(--text)" }}
         >
-          Hobby work.
+          Built & launched.
         </h2>
 
         <div
           ref={track}
-          className="flex flex-col gap-6 lg:flex-row lg:gap-8 lg:flex-nowrap lg:[will-change:transform]"
+          className={reduced ? "grid gap-6 md:grid-cols-2" : "flex flex-col gap-6 lg:flex-row lg:gap-8 lg:flex-nowrap lg:[will-change:transform]"}
         >
           {projects.map((p) => (
             <Link
@@ -77,7 +79,7 @@ export default function HorizontalProjects({ projects }: { projects: Project[] }
               href={p.href}
               target="_blank"
               rel="noreferrer"
-              className={`group block w-full shrink-0 p-6 ${p.featured ? "lg:w-[560px]" : "lg:w-[440px]"}`}
+              className={`project-detail-card group block w-full shrink-0 p-6 ${reduced ? "" : p.featured ? "lg:w-[560px]" : "lg:w-[440px]"}`}
               style={{
                 border: p.featured ? "1px solid var(--orange)" : "1px solid var(--border)",
                 background: "var(--surface)",

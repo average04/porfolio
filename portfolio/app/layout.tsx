@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import {
+  Barlow_Condensed,
+  Instrument_Sans,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "@/app/components/scroll/SmoothScroll";
 
 const barlow = Barlow_Condensed({
   variable: "--font-display",
@@ -22,8 +25,10 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://jayrb.dev"),
   title: "Jay-R Bayog — Software Engineer",
-  description: "Full-stack software engineer. .NET, React, Azure. Six years building production systems.",
+  description:
+    "Full-stack software engineer. .NET, React, Azure. Building thoughtful products and dependable systems since 2019.",
 };
 
 export default function RootLayout({
@@ -33,8 +38,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${barlow.variable} ${instrument.variable} ${mono.variable} antialiased`}>
-        <SmoothScroll>{children}</SmoothScroll>
+      <body
+        className={`${barlow.variable} ${instrument.variable} ${mono.variable} antialiased`}
+      >
+        {children}
       </body>
     </html>
   );

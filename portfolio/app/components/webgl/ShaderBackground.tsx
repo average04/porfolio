@@ -24,7 +24,7 @@ const fragment = /* glsl */ `
     n = n / 1.5 * 0.5 + 0.5;
 
     vec3 base   = vec3(0.047, 0.039, 0.031); // #0C0A08
-    vec3 accent = vec3(0.31, 0.62, 1.0);     // #4F9EFF
+    vec3 accent = vec3(0.478, 0.722, 1.0);   // #7AB8FF
     vec3 col = mix(base, accent, smoothstep(0.5, 1.0, n) * 0.30);
 
     float d = distance(uv, vec2(0.5));
