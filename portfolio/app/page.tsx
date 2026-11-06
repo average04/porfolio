@@ -1,850 +1,314 @@
-"use client";
-
 import Image from "next/image";
-import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import CopyEmail from "./components/CopyEmail";
 
-const AstronautScene = dynamic(
-  () => import("./components/webgl/AstronautScene"),
-  {
-    ssr: false,
-    loading: () => <p className="orbit-loading">Preparing your orbit…</p>,
-  },
-);
+const email = "bayogjayr@gmail.com";
+const resume = "/Resume-Bayog_JayR.pdf";
+const github = "https://github.com/average04";
+const linkedin = "https://www.linkedin.com/in/jay-r-bayog";
 
-const selected = [
+const work = [
   {
-    id: "01",
+    id: "kamee",
     name: "Kamee Fitness",
-    category: "MOBILE APP · FITNESS",
-    className: "kamee",
-    headline: "A little stronger.\nEvery single day.",
-    description:
-      "A training companion that makes consistency feel achievable. Workouts, run tracking, and progress in one place.",
-    image: "/projects/kamee.png",
-    alt: "Kamee Fitness website with its turtle mascot, training plans, and workout features",
-    stack: ["React Native", "Supabase", "Next.js"],
+    summary:
+      "A fitness app on the App Store and Google Play, with training plans, GPS run tracking, and a coaching assistant that runs on the phone itself.",
+    details:
+      "I design, build, and ship it on my own. The app is React Native with Expo Router. The backend is Supabase, with row-level security and edge functions that verify purchases. It maps runs with Mapbox, reads Bluetooth heart-rate monitors, and syncs with Apple Health and Health Connect.",
+    stack: "React Native, TypeScript, Supabase",
     href: "https://kamee.fit/",
     domain: "kamee.fit",
-    challenge:
-      "Build a fitness experience that connects daily activity with long-term progress, across mobile and the web.",
-    build:
-      "Workout and run/walk logging, progress visualization, and goal setting, backed by Supabase with a React Native mobile experience.",
+    image: "/projects/kamee.png",
+    alt: "The Kamee Fitness home page: a cartoon turtle running at sunset beside the headline “Strong and steady wins the race.”",
   },
   {
-    id: "02",
+    id: "surallah",
     name: "BetterSurallah",
-    category: "WEB PLATFORM · CIVIC TECH",
-    className: "surallah",
-    headline: "Public information.\nActually accessible.",
-    description:
-      "An independent window into my hometown. Bringing public documents, budgets, and local officials into one searchable place.",
-    image: "/projects/surallah.png",
-    alt: "BetterSurallah transparency platform showing public documents, projects, and officials",
-    stack: ["Next.js", "TypeScript", "Supabase"],
+    summary:
+      "An independent site for Surallah, South Cotabato, the town where I grew up. It puts the municipality’s budgets, audits, and public documents in one place.",
+    details:
+      "It also lists government projects with their amounts, funding sources, and status, and has a searchable directory of officials from the mayor down to barangay captains.",
+    stack: "Next.js, TypeScript, Supabase",
     href: "https://bettersurallah.org/",
     domain: "bettersurallah.org",
-    challenge:
-      "Make scattered local government information easier for residents to find and understand.",
-    build:
-      "A citizen-built platform with budget and document access, project funding information, and a searchable directory of local officials.",
+    image: "/projects/surallah.png",
+    alt: "The BetterSurallah home page with the headline “See how Surallah works,” town figures, and links to transparency records, projects, and officials.",
   },
   {
-    id: "03",
-    name: "EMBERS",
-    category: "WEB EXPERIENCE · JOURNALING",
-    className: "embers",
-    headline: "Some thoughts\ndeserve a place.",
-    description:
-      "A quiet space for capturing and sharing ideas. Built around thoughtful writing, real-time sync, and room to reflect.",
-    image: "/projects/embers.png",
-    alt: "Embers welcome screen, a minimal space to light your thoughts",
-    stack: ["Next.js", "TypeScript", "Supabase"],
+    id: "embers",
+    name: "Embers",
+    summary:
+      "A quiet place to write down small thoughts and share them, with real-time sync across devices.",
+    stack: "Next.js, TypeScript, Supabase",
     href: "https://www.embersthoughts.com/",
     domain: "embersthoughts.com",
-    challenge:
-      "Give small, unfinished thoughts a home without a noisy or distracting interface.",
-    build:
-      "A focused journaling experience for capturing and sharing ideas, with real-time sync using Next.js and Supabase.",
+    image: "/projects/embers.png",
+    alt: "The Embers welcome screen: the name set in a serif on a black background, with a Go button.",
   },
 ];
 
-const experiments = [
+const otherProjects = [
   {
     name: "KaraParty",
-    type: "AI",
-    description: "Vocal separation. Synced lyrics. Your next karaoke night.",
-    stack: ".NET · Azure AI · Next.js",
+    description: "Karaoke with vocal separation and synced lyrics.",
+    stack: ".NET, Azure AI, Next.js",
     href: "https://agreeable-pebble-05ce40f00.6.azurestaticapps.net/",
   },
   {
     name: "Bayani TD",
-    type: "Games",
-    description: "Filipino heroes meet browser-based tower defense.",
-    stack: "Phaser 3 · TypeScript · Supabase",
+    description: "A tower defense game in the browser, played with Filipino heroes.",
+    stack: "Phaser 3, TypeScript, Supabase",
     href: "https://bayani.jayrb.dev/",
   },
   {
     name: "Talinhaga",
-    type: "Web",
-    description: "A place for stories, poems, and a slower kind of reading.",
-    stack: "Next.js · Supabase",
+    description: "A site for reading stories and poems.",
+    stack: "Next.js, Supabase",
     href: "https://talinhaga.vercel.app/",
   },
   {
     name: "Bemy",
-    type: "Web",
-    description: "A personal Valentine, built and shipped in a day.",
-    stack: "Next.js · TypeScript",
+    description: "A Valentine’s page, built and shipped in one day.",
+    stack: "Next.js, TypeScript",
     href: "https://bemy-web-app.vercel.app/",
   },
   {
     name: "Cityland",
-    type: "Web",
-    description: "An easier way to explore and manage property listings.",
-    stack: "Next.js · Supabase",
+    description: "A site for browsing and managing property listings.",
+    stack: "Next.js, Supabase",
     href: "https://realstate-liard.vercel.app/",
   },
 ];
 
 const experience = [
   {
-    company: "DXC Technologies",
+    dates: "Sep 2025 – now",
     role: "Software Engineer",
-    date: "SEP 2025 — PRESENT",
+    company: "DXC Technology",
     description:
-      ".NET and React applications, Azure cloud solutions, and the pipelines that keep them shipping.",
-    current: true,
+      "Enterprise web applications in C#/.NET, Node.js, and React, deployed and run on Azure.",
   },
   {
-    company: "Smartmoneta",
+    dates: "Sep 2024 – May 2025",
     role: ".NET Developer",
-    date: "SEP 2024 — MAY 2025",
+    company: "Smartmoneta",
     description:
-      "Payment gateway development, fintech automations, and technical application support.",
+      "Maintained a production payment gateway, automated manual processing work, and traced production incidents to their root cause.",
   },
   {
+    dates: "Jan 2023 – Sep 2024",
+    role: "Software Engineer",
     company: "Flexisource IT",
-    role: "Software Engineer",
-    date: "JAN 2023 — SEP 2024",
     description:
-      "Full-stack SaaS development with C#/.NET and React. Better APIs, new features, steady improvements.",
+      "Worked on a SaaS platform built on .NET and React: REST APIs, and new features taken from spec to release.",
   },
   {
-    company: "Palawan Pawnshop Group",
+    dates: "Aug 2019 – Dec 2022",
     role: "Software Engineer",
-    date: "AUG 2019 — DEC 2022",
+    company: "Palawan Pawnshop Group",
     description:
-      "Notification and reporting systems, REST APIs, and production deployments.",
+      "Built a notification delivery system on microservices, reporting modules for business users, and the coding standards the team adopted.",
+  },
+  {
+    dates: "Aug 2018 – Aug 2019",
+    role: "Branch Associate",
+    company: "Palawan Pawnshop Group",
+    description:
+      "Ran daily branch operations and customer transactions, then moved to the engineering team.",
+  },
+  {
+    dates: "2014 – 2018",
+    role: "BS Information Technology",
+    company: "STI College Koronadal",
   },
 ];
-const email = "bayogjayr@gmail.com";
 
-function Arrow({ diagonal = false }: { diagonal?: boolean }) {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d={diagonal ? "M6 18 18 6M6 6h12v12" : "M4 12h15m-6-6 6 6-6 6"}
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-function OrbitMark() {
-  return (
-    <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
-      <circle cx="22" cy="22" r="10" stroke="currentColor" strokeWidth="1.4" />
-      <ellipse
-        cx="22"
-        cy="22"
-        rx="22"
-        ry="7"
-        transform="rotate(-35 22 22)"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
-      <circle cx="37" cy="11" r="3" fill="currentColor" />
-    </svg>
-  );
-}
+const tools = [
+  {
+    area: "Backend",
+    items:
+      "C#, .NET, ASP.NET, Node.js, REST APIs, microservices, RabbitMQ",
+  },
+  {
+    area: "Frontend",
+    items: "React, Next.js, TypeScript, React Native with Expo",
+  },
+  {
+    area: "Data",
+    items: "SQL Server, PostgreSQL, MySQL, Redis, Supabase",
+  },
+  {
+    area: "Cloud",
+    items: "Microsoft Azure (Azure Fundamentals certified, 2026), Docker, CI/CD",
+  },
+  {
+    area: "Testing",
+    items: "Jest, Selenium",
+  },
+];
 
 export default function Home() {
-  const [orbit, setOrbit] = useState(false);
-  const [motionPaused, setMotionPaused] = useState(false);
-  const [filter, setFilter] = useState("All");
-  const [menu, setMenu] = useState(false);
-  const [active, setActive] = useState("");
-  const [copyStatus, setCopyStatus] = useState("");
-  const menuButton = useRef<HTMLButtonElement>(null);
-  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const visibleExperiments = experiments.filter(
-    (project) => filter === "All" || project.type === filter,
-  );
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("is-revealed");
-        });
-      },
-      { threshold: 0.08 },
-    );
-    document
-      .querySelectorAll("[data-reveal]")
-      .forEach((element) => observer.observe(element));
-    const sections = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      { rootMargin: "-15% 0px -65% 0px" },
-    );
-    document
-      .querySelectorAll("main > section[id]")
-      .forEach((element) => sections.observe(element));
-    return () => {
-      observer.disconnect();
-      sections.disconnect();
-      if (copyTimer.current) clearTimeout(copyTimer.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!menu) return;
-    const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMenu(false);
-        menuButton.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", close);
-    return () => document.removeEventListener("keydown", close);
-  }, [menu]);
-
-  async function copyEmail() {
-    try {
-      await navigator.clipboard.writeText(email);
-      setCopyStatus("Email copied");
-    } catch {
-      setCopyStatus("Copy unavailable. Use the email link.");
-    }
-    if (copyTimer.current) clearTimeout(copyTimer.current);
-    copyTimer.current = setTimeout(() => setCopyStatus(""), 3500);
-  }
-
   return (
-    <div className={`portfolio ${motionPaused ? "motion-paused" : ""}`}>
+    <>
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <header className="site-header">
-        <a className="wordmark" href="#home" aria-label="Jay-R Bayog, home">
-          <OrbitMark />
-          <span>
-            JAY-R BAYOG<span className="wordmark-sub">SOFTWARE ENGINEER</span>
-          </span>
-        </a>
-        <nav className="desktop-nav" aria-label="Main navigation">
-          {[
-            ["projects", "Work"],
-            ["about", "About"],
-            ["experience", "Experience"],
-          ].map(([id, label]) => (
-            <a
-              key={id}
-              href={`#${id}`}
-              aria-current={active === id ? "location" : undefined}
-            >
-              <span className="nav-dot" />
-              {label}
+
+      <header className="intro">
+        <div className="shell">
+          <div className="masthead">
+            <h1>
+              <Image
+                src="/avatar.png"
+                alt=""
+                width={80}
+                height={80}
+                className="avatar"
+                priority
+              />
+              Jay-R Bayog
+            </h1>
+            <nav aria-label="Sections">
+              <a href="#work">Work</a>
+              <a href="#experience">Experience</a>
+              <a href="#contact">Contact</a>
+            </nav>
+          </div>
+
+          <p className="statement">
+            I’m a software engineer in Metro Manila. I build .NET and Azure
+            systems at DXC Technology, and on my own time I make things like{" "}
+            <a href="#kamee">a&nbsp;fitness app</a>,{" "}
+            <a href="#surallah">a&nbsp;public records site for my hometown</a>, and{" "}
+            <a href="https://bayani.jayrb.dev/">
+              a&nbsp;tower defense game about Filipino heroes
             </a>
-          ))}
-        </nav>
-        <a className="header-contact" href="#contact">
-          Let’s talk <Arrow diagonal />
-        </a>
-        <button
-          className="menu-toggle"
-          type="button"
-          ref={menuButton}
-          aria-expanded={menu}
-          aria-controls="mobile-nav"
-          onClick={() => setMenu(!menu)}
-        >
-          {menu ? "Close −" : "Menu +"}
-        </button>
-        {menu && (
-          <nav
-            id="mobile-nav"
-            className="mobile-nav"
-            aria-label="Mobile navigation"
-          >
-            {[
-              ["projects", "Selected work"],
-              ["about", "About me"],
-              ["experience", "Experience"],
-              ["contact", "Contact"],
-            ].map(([id, label]) => (
-              <a key={id} href={`#${id}`} onClick={() => setMenu(false)}>
-                {label}
-                <Arrow diagonal />
-              </a>
-            ))}
-          </nav>
-        )}
+            .
+          </p>
+
+          <ul className="link-row">
+            <li>
+              <a href={`mailto:${email}`}>{email}</a>
+            </li>
+            <li>
+              <a href={resume}>Résumé (PDF)</a>
+            </li>
+            <li>
+              <a href={github}>GitHub</a>
+            </li>
+            <li>
+              <a href={linkedin}>LinkedIn</a>
+            </li>
+          </ul>
+        </div>
       </header>
 
       <main id="main">
-        <section className="hero" id="home" aria-labelledby="hero-title">
-          <div className="hero-grid" aria-hidden="true" />
-          <div className="hero-glow" aria-hidden="true" />
-          <div className="hero-topline">
-            <p className="eyebrow">
-              <span className="status-dot" /> OPEN TO NEW OPPORTUNITIES
-            </p>
-            <p className="eyebrow">
-              BASED IN THE PHILIPPINES <span className="tiny-star">✳︎</span>
-            </p>
-          </div>
-          <div className="hero-heading">
-            <p className="eyebrow hero-kicker">
-              A LITTLE CURIOSITY GOES A LONG WAY.
-            </p>
-            <h1 id="hero-title">
-              <span>SERIOUS CODE.</span>
-              <span className="outline-word">CURIOUS MIND.</span>
-            </h1>
-          </div>
-          <div className={`hero-art ${orbit ? "is-orbit" : ""}`}>
-            <div className="hero-orbit-ring" aria-hidden="true" />
-            {orbit ? (
-              <AstronautScene />
-            ) : (
-              <Image
-                src="/images/explorer.png"
-                alt="An astronaut reaching forward in zero gravity, with a reflective black visor and blue rim lighting"
-                fill
-                priority
-                sizes="(max-width: 700px) 95vw, 55vw"
-                className="explorer-image"
-              />
-            )}
-            {!orbit && (
-              <span className="art-annotation">
-                <span /> KEEP EXPLORING.
-              </span>
-            )}
-          </div>
-          <div className="hero-summary">
-            <p>
-              I’m Jay-R. I turn complex problems into
-              <br className="desktop-break" /> thoughtful software, from the
-              first idea
-              <br className="desktop-break" /> to the systems that keep it
-              running.
-            </p>
-            <a href="#projects" className="button button-accent">
-              Explore my work <Arrow diagonal />
-            </a>
-            <a href="/Resume-Bayog_JayR.pdf" className="text-link" download>
-              Grab my résumé <span>↓</span>
-            </a>
-          </div>
-          <div className="hero-mode">
-            <span className="eyebrow">CHOOSE YOUR VIEW</span>
-            <div
-              className="view-switch"
-              role="group"
-              aria-label="Astronaut view"
+        <section id="work" className="shell section" aria-labelledby="work-title">
+          <h2 id="work-title">Work</h2>
+          {work.map((project) => (
+            <article
+              key={project.id}
+              id={project.id}
+              className="project"
+              aria-labelledby={`${project.id}-title`}
             >
-              <button
-                type="button"
-                aria-pressed={!orbit}
-                onClick={() => setOrbit(false)}
-              >
-                01 / Cinematic
-              </button>
-              <button
-                type="button"
-                aria-pressed={orbit}
-                onClick={() => setOrbit(true)}
-              >
-                02 / Live 3D <span>↗</span>
-              </button>
-            </div>
-            <button
-              className="motion-toggle"
-              type="button"
-              aria-pressed={motionPaused}
-              onClick={() => setMotionPaused(!motionPaused)}
-            >
-              {motionPaused
-                ? "▶ Resume artwork motion"
-                : "Ⅱ Pause artwork motion"}
-            </button>
-          </div>
-          <div className="hero-foot">
-            <span>INDEPENDENT THINKING. PRODUCTION EXPERIENCE.</span>
-            <a href="#projects">
-              SCROLL TO EXPLORE <span>↓</span>
-            </a>
-            <span>PORTFOLIO / 2026</span>
-          </div>
-        </section>
-
-        <div className="capability-strip" aria-label="Core technologies">
-          <span>IDEA → INTERFACE → INFRASTRUCTURE</span>
-          <div>
-            <span>C# / .NET</span>
-            <i>✳︎</i>
-            <span>REACT / NEXT.JS</span>
-            <i>✳︎</i>
-            <span>AZURE</span>
-            <i>✳︎</i>
-            <span>FULL-STACK THINKING</span>
-          </div>
-        </div>
-
-        <section
-          id="projects"
-          className="work section-shell"
-          aria-labelledby="work-title"
-        >
-          <div className="section-heading" data-reveal>
-            <p className="eyebrow">01 / SELECTED WORK</p>
-            <div>
-              <h2 id="work-title">
-                Less talk.
-                <br />
-                <span className="serif-word">More launched.</span>
-              </h2>
-              <p>
-                A few things I’ve taken from
-                <br />
-                “what if” to out in the world.
-              </p>
-            </div>
-            <span className="section-counter">(03)</span>
-          </div>
-          <div className="featured-work">
-            {selected.map((project) => (
-              <article
-                key={project.id}
-                className={`work-project ${project.className}`}
-                data-reveal
-              >
-                <a
-                  className="project-visual"
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Visit ${project.name} (opens in a new tab)`}
-                >
-                  <div className="visual-topline">
-                    <span>{project.category}</span>
-                    <span>PROJECT / {project.id}</span>
-                  </div>
-                  <div className="project-window">
-                    <div className="browser-bar">
-                      <span>
-                        <i />
-                        <i />
-                        <i />
-                      </span>
-                      <span>{project.domain}</span>
-                      <span>↗</span>
-                    </div>
-                    <Image
-                      src={project.image}
-                      alt={project.alt}
-                      width={1440}
-                      height={1000}
-                      sizes="(max-width: 700px) 92vw, 80vw"
-                    />
-                  </div>
-                  <span className="visual-open">
-                    Explore project <Arrow diagonal />
-                  </span>
-                  <span className="visual-watermark" aria-hidden="true">
-                    {project.id}
-                  </span>
-                </a>
-                <div className="project-information">
-                  <div className="project-title">
-                    <span className="eyebrow">
-                      {project.id} / {project.name}
-                    </span>
-                    <h3>
-                      {project.headline.split("\n").map((line) => (
-                        <span key={line}>{line}</span>
-                      ))}
-                    </h3>
-                  </div>
-                  <div className="project-story">
-                    <p>{project.description}</p>
-                    <ul
-                      className="tech-tags"
-                      aria-label={`${project.name} technologies`}
-                    >
-                      {project.stack.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                    <details className="project-details">
-                      <summary>
-                        Behind the build <span>+</span>
-                      </summary>
-                      <div>
-                        <h4>The idea</h4>
-                        <p>{project.challenge}</p>
-                        <h4>The build</h4>
-                        <p>{project.build}</p>
-                        <a href={project.href} target="_blank" rel="noreferrer">
-                          Visit live project <Arrow diagonal />
-                        </a>
-                      </div>
-                    </details>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section
-          className="lab section-shell"
-          id="lab"
-          aria-labelledby="lab-title"
-        >
-          <div className="lab-heading" data-reveal>
-            <div>
-              <p className="eyebrow">THE SIDE QUESTS</p>
-              <h2 id="lab-title">
-                Curiosity doesn’t
-                <br />
-                <span className="serif-word">clock out.</span>
-              </h2>
-            </div>
-            <p>
-              Games, experiments, and small ideas
-              <br />
-              that became real things.
-            </p>
-          </div>
-          <div
-            className="project-filters"
-            role="group"
-            aria-label="Filter side projects"
-          >
-            {["All", "Web", "AI", "Games"].map((item) => (
-              <button
-                type="button"
-                key={item}
-                aria-pressed={filter === item}
-                onClick={() => setFilter(item)}
-              >
-                {item}
-                {item === "All" && <span>05</span>}
-              </button>
-            ))}
-          </div>
-          <p className="sr-only" role="status">
-            Showing {visibleExperiments.length} side projects
-          </p>
-          <div className="lab-list">
-            {visibleExperiments.map((project) => (
-              <a
-                key={project.name}
-                className="lab-row"
-                href={project.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span className="lab-type">{project.type}</span>
-                <div>
-                  <h3>{project.name}</h3>
-                  <p>{project.description}</p>
-                </div>
-                <span className="lab-stack">{project.stack}</span>
-                <Arrow diagonal />
+              <div className="project-text">
+                <h3 id={`${project.id}-title`}>{project.name}</h3>
+                <p>{project.summary}</p>
+                {project.details && <p>{project.details}</p>}
+                <p className="quiet">Built with {project.stack}</p>
+                <a href={project.href}>{project.domain}</a>
+              </div>
+              <a className="shot" href={project.href}>
+                <Image
+                  src={project.image}
+                  alt={project.alt}
+                  width={1440}
+                  height={1000}
+                  sizes="(max-width: 960px) 100vw, 800px"
+                />
               </a>
-            ))}
-          </div>
+            </article>
+          ))}
         </section>
 
-        <section id="about" className="about" aria-labelledby="about-title">
-          <div className="section-shell">
-            <div className="about-top" data-reveal>
-              <p className="eyebrow">02 / THE HUMAN BEHIND THE CODE</p>
-              <OrbitMark />
-            </div>
-            <div className="about-grid">
-              <div className="portrait-panel" data-reveal>
-                <div className="portrait-frame">
-                  <Image
-                    src="/avatar.png"
-                    alt="Jay-R Bayog"
-                    width={700}
-                    height={800}
-                    sizes="(max-width: 700px) 80vw, 32vw"
-                  />
-                  <span className="portrait-corner corner-tl" />
-                  <span className="portrait-corner corner-br" />
-                  <span className="portrait-label">JRB / EARTH CREW</span>
-                </div>
-                <div className="portrait-caption">
-                  <span>JAY-R BAYOG</span>
-                  <span>PHILIPPINES ↗</span>
-                </div>
-              </div>
-              <div className="about-copy" data-reveal>
-                <h2 id="about-title">
-                  Head in space.
-                  <br />
-                  <span className="serif-word">Feet on the ground.</span>
-                </h2>
-                <p className="about-lead">
-                  I like big ideas. I like making them work even more.
-                </p>
-                <p>
-                  I’m a full-stack software engineer working across .NET, React,
-                  and Azure. Since 2019, I’ve built systems in fintech, SaaS,
-                  and enterprise, and made room for projects that mean something
-                  to me.
-                </p>
-                <p>
-                  A fitness app. A clearer view of my hometown. A space for
-                  someone’s thoughts. Different problems, same instinct:
-                  understand the people, untangle the complexity, and build
-                  something useful.
-                </p>
-                <a href="/Resume-Bayog_JayR.pdf" download className="text-link">
-                  The longer version? My résumé <Arrow diagonal />
+        <section className="shell section" aria-labelledby="other-title">
+          <h2 id="other-title">Other projects</h2>
+          <ul className="rows">
+            {otherProjects.map((project) => (
+              <li key={project.name}>
+                <a href={project.href} className="row-label">
+                  {project.name}
                 </a>
-                <div className="about-facts">
-                  <div>
-                    <strong>2019</strong>
-                    <span>BUILDING SINCE</span>
-                  </div>
-                  <div>
-                    <strong>04</strong>
-                    <span>COMPANIES</span>
-                  </div>
-                  <div>
-                    <strong>08</strong>
-                    <span>PERSONAL PROJECTS</span>
-                  </div>
+                <div>
+                  <p>{project.description}</p>
+                  <p className="quiet">{project.stack}</p>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="toolkit section-shell"
-          id="stack"
-          aria-labelledby="toolkit-title"
-        >
-          <div className="toolkit-heading" data-reveal>
-            <p className="eyebrow">03 / HOW I BUILD</p>
-            <h2 id="toolkit-title">
-              From the interface
-              <br />
-              <span className="serif-word">to the infrastructure.</span>
-            </h2>
-          </div>
-          <div className="capability-grid">
-            {[
-              {
-                n: "01",
-                title: "Make it work.",
-                description:
-                  "Clear APIs, dependable services, and data that stays connected.",
-                tools:
-                  "C# / .NET · REST APIs · Microservices · PostgreSQL · SQL Server · Redis",
-                symbol: "{ }",
-              },
-              {
-                n: "02",
-                title: "Make it feel right.",
-                description:
-                  "Responsive interfaces and thoughtful interactions, across web and mobile.",
-                tools:
-                  "React · Next.js · TypeScript · React Native · Tailwind CSS",
-                symbol: "↗",
-              },
-              {
-                n: "03",
-                title: "Keep it running.",
-                description:
-                  "Repeatable deployments and the infrastructure behind the experience.",
-                tools: "Azure · Docker · CI/CD · Git · Supabase · RabbitMQ",
-                symbol: "◎",
-              },
-            ].map((item) => (
-              <article className="capability" key={item.n} data-reveal>
-                <div className="capability-top">
-                  <span>{item.n}</span>
-                  <span className="capability-symbol" aria-hidden="true">
-                    {item.symbol}
-                  </span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div className="capability-tools">{item.tools}</div>
-              </article>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
 
         <section
           id="experience"
-          className="experience section-shell"
+          className="shell section"
           aria-labelledby="experience-title"
         >
-          <div className="experience-intro" data-reveal>
-            <p className="eyebrow">04 / FLIGHT LOG</p>
-            <h2 id="experience-title">
-              Good work.
-              <br />
-              <span className="serif-word">Built over time.</span>
-            </h2>
-            <p>
-              Different teams, different challenges.
-              <br />A growing perspective on what
-              <br />
-              makes software last.
-            </p>
-            <a className="text-link" href="/Resume-Bayog_JayR.pdf" download>
-              Download résumé <span>↓</span>
-            </a>
-          </div>
-          <div className="experience-list">
+          <h2 id="experience-title">Experience</h2>
+          <ol className="rows">
             {experience.map((item) => (
-              <article
-                key={item.company}
-                className="experience-item"
-                data-reveal
-              >
-                <div className="experience-date">
-                  <span>{item.date}</span>
-                  {item.current && (
-                    <span className="current-role">
-                      <i /> CURRENT
-                    </span>
-                  )}
+              <li key={`${item.company}-${item.role}`}>
+                <p className="row-label quiet">{item.dates}</p>
+                <div>
+                  <h3>
+                    {item.role}, {item.company}
+                  </h3>
+                  {item.description && <p>{item.description}</p>}
                 </div>
-                <h3>{item.company}</h3>
-                <h4>{item.role}</h4>
-                <p>{item.description}</p>
-              </article>
+              </li>
             ))}
-          </div>
+          </ol>
+          <p className="after-rows">
+            The full history is in my <a href={resume}>résumé (PDF, 103&nbsp;KB)</a>.
+          </p>
         </section>
 
-        <section
-          id="contact"
-          className="contact"
-          aria-labelledby="contact-title"
-        >
-          <div className="contact-orbit" aria-hidden="true" />
-          <div className="section-shell">
-            <div className="contact-top">
-              <p className="eyebrow">
-                <span className="status-dot" /> OPEN FOR THE NEXT CHAPTER
-              </p>
-              <span className="eyebrow">05 / SAY HELLO</span>
-            </div>
-            <div className="contact-main" data-reveal>
-              <h2 id="contact-title">
-                HAVE SOMETHING
-                <br />
-                <span>IN MIND?</span>
-              </h2>
-              <a
-                href={`mailto:${email}`}
-                className="contact-arrow"
-                aria-label="Email Jay-R Bayog"
-              >
-                <Arrow diagonal />
-              </a>
-            </div>
-            <div className="contact-bottom">
-              <p>
-                A role, a project, or an interesting idea.
-                <br />
-                I’d love to hear what you’re thinking.
-              </p>
-              <div className="email-area">
-                <a href={`mailto:${email}`} className="email-link">
-                  {email}
-                </a>
-                <button
-                  type="button"
-                  onClick={copyEmail}
-                  aria-label="Copy email address"
-                >
-                  Copy ↗
-                </button>
-                <span className="copy-status" role="status">
-                  {copyStatus}
-                </span>
+        <section className="shell section" aria-labelledby="tools-title">
+          <h2 id="tools-title">Tools</h2>
+          <dl className="rows">
+            {tools.map((group) => (
+              <div key={group.area}>
+                <dt className="row-label">{group.area}</dt>
+                <dd>{group.items}</dd>
               </div>
-            </div>
-          </div>
+            ))}
+          </dl>
         </section>
       </main>
-      <footer className="site-footer">
-        <div className="footer-top">
-          <a href="#home" className="wordmark">
-            <OrbitMark />
-            <span>JAY-R BAYOG</span>
-          </a>
-          <p>Always curious. Still exploring.</p>
-          <a href="#home" className="back-top">
-            Back to top ↑
-          </a>
-        </div>
-        <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} JAY-R BAYOG</span>
-          <span>DESIGNED ON EARTH. BUILT WITH INTENTION.</span>
-          <details className="credits">
-            <summary>Credits +</summary>
-            <p>
-              Astronaut hero artwork generated with AI. Interactive 3D astronaut
-              by Poly,{" "}
-              <a
-                href="https://creativecommons.org/licenses/by/2.0/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                CC BY 2.0
-              </a>
-              , via{" "}
-              <a
-                href="https://github.com/google/model-viewer/blob/master/packages/modelviewer.dev/ATTRIBUTIONS.md"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Google model-viewer
-              </a>
-              . Lighting and presentation adapted. Project images captured from
-              their public websites.
-            </p>
-          </details>
+
+      <footer id="contact" className="outro" aria-labelledby="contact-title">
+        <div className="shell">
+          <h2 id="contact-title" className="statement">
+            Email me at <a href={`mailto:${email}`}>{email}</a>
+          </h2>
+          <CopyEmail email={email} />
+          <p className="outro-note">
+            Write about a role, a project, or anything on this page.
+          </p>
+          <ul className="link-row">
+            <li>
+              <a href={github}>GitHub</a>
+            </li>
+            <li>
+              <a href={linkedin}>LinkedIn</a>
+            </li>
+            <li>
+              <a href={resume}>Résumé (PDF)</a>
+            </li>
+          </ul>
+          <p className="copyright">© {new Date().getFullYear()} Jay-R Bayog</p>
         </div>
       </footer>
-    </div>
+    </>
   );
 }

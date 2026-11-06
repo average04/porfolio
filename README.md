@@ -1,29 +1,25 @@
-# Jay-R Bayog — Portfolio
+# Jay-R Bayog, portfolio
 
-Personal portfolio of Jay-R Bayog, full-stack software engineer (.NET, React, Azure).
+The source for [jayrb.dev](https://jayrb.dev), the personal site of Jay-R Bayog, a software engineer in Metro Manila working in .NET, React, and Azure.
 
-**Live at [jayrb.dev](https://jayrb.dev)**
+It is a single static page: an introduction, three featured projects with screenshots, a list of smaller projects, work history, tools, and contact details.
 
-## Highlights
+## Design
 
-- **Pinned hero** with scroll-scrubbed scale and fade animations
-- **Horizontal-scroll projects section** — cards pin and translate sideways as you scroll, with featured projects called out in a wider, accented card
-- **Velocity marquee** that reacts to scroll speed
-- **WebGL shader background** rendered with OGL
-- **Smooth scrolling** via Lenis
-- **Reduced-motion aware** — all scroll effects respect `prefers-reduced-motion` and fall back to a static layout
-- Generated Open Graph image and favicons via Next.js metadata routes
+- One typeface, [Atkinson Hyperlegible Next](https://fonts.google.com/specimen/Atkinson+Hyperlegible+Next), loaded with `next/font`. Hierarchy comes from size and weight only.
+- Colors are white, black, and the blue of the Philippine flag (`#0038A8`). The flag's yellow (`#FCD116`) is used only for focus outlines and text selection.
+- Blue fields at the top and bottom hold the introduction and contact details. The work sits on white between them.
+- No scroll animation. The only motion is feedback when you interact, such as the copy-address button.
 
 ## Tech stack
 
 | | |
 |---|---|
-| Framework | [Next.js 16](https://nextjs.org) (App Router, Turbopack) + React 19 |
+| Framework | [Next.js 16](https://nextjs.org) (App Router) with React 19 |
 | Language | TypeScript |
-| Styling | Tailwind CSS 4 |
-| Animation | GSAP + ScrollTrigger (`@gsap/react`), Framer Motion |
-| Scrolling | Lenis |
-| WebGL | OGL |
+| Styling | Plain CSS in `app/globals.css`, with Tailwind CSS 4 for its base reset |
+
+The page is a server component. The only client JavaScript is the copy-address button.
 
 ## Getting started
 
@@ -49,21 +45,23 @@ Open [http://localhost:3000](http://localhost:3000) to view it.
 ## Structure
 
 ```
-portfolio/app/
-├── page.tsx                  # Single-page layout + project/skill data
-├── layout.tsx                # Metadata, fonts, smooth-scroll provider
-├── components/
-│   ├── scroll/               # GSAP/ScrollTrigger sections
-│   │   ├── PinnedHero.tsx
-│   │   ├── HorizontalProjects.tsx
-│   │   ├── VelocityMarquee.tsx
-│   │   ├── Parallax.tsx
-│   │   ├── PinnedContact.tsx
-│   │   └── SmoothScroll.tsx
-│   └── webgl/
-│       └── ShaderBackground.tsx
-├── hooks/
-│   └── usePrefersReducedMotion.ts
-└── lib/
-    └── gsap.ts               # GSAP plugin registration
+portfolio/
+├── app/
+│   ├── page.tsx              # The page, plus project, experience, and tools data
+│   ├── layout.tsx            # Metadata and font
+│   ├── globals.css           # All styles
+│   ├── components/
+│   │   └── CopyEmail.tsx     # Copy-address button (client component)
+│   ├── fonts/                # Atkinson TTFs for the generated icon and social image
+│   ├── icon.tsx              # Favicon
+│   ├── apple-icon.tsx        # Apple touch icon
+│   └── opengraph-image.tsx   # Social sharing image
+└── public/
+    ├── projects/             # Screenshots of the featured projects
+    ├── avatar.png
+    └── Resume-Bayog_JayR.pdf
 ```
+
+To change the content, edit the `work`, `otherProjects`, `experience`, and `tools` arrays at the top of `app/page.tsx`.
+
+Atkinson Hyperlegible Next is licensed under the SIL Open Font License.
