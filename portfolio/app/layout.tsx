@@ -1,20 +1,34 @@
 import type { Metadata } from "next";
-import { Atkinson_Hyperlegible_Next } from "next/font/google";
+import {
+  Barlow_Condensed,
+  Instrument_Sans,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
 
-const atkinson = Atkinson_Hyperlegible_Next({
-  variable: "--font-atkinson",
+const barlow = Barlow_Condensed({
+  variable: "--font-display",
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  fallback: ["system-ui", "Arial", "sans-serif"],
-  adjustFontFallback: false,
+  weight: ["400", "600", "700", "800", "900"],
+});
+
+const instrument = Instrument_Sans({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jayrb.dev"),
-  title: "Jay-R Bayog, software engineer",
+  title: "Jay-R Bayog — Software Engineer",
   description:
-    "Software engineer in Metro Manila working in .NET, React, and Azure. Maker of Kamee Fitness and BetterSurallah.",
+    "Full-stack software engineer. .NET, React, Azure. Building thoughtful products and dependable systems since 2019.",
 };
 
 export default function RootLayout({
@@ -24,7 +38,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={atkinson.variable}>{children}</body>
+      <body
+        className={`${barlow.variable} ${instrument.variable} ${mono.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
